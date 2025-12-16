@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f3f4f6;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-border: #e5e7eb;
+  }
+
+  .dark {
+    --color-bg-primary: #111827;
+    --color-bg-secondary: #1f2937;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #9ca3af;
+    --color-border: #374151;
+  }
+
+  body {
+    @apply bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--color-bg-secondary)] hover:bg-gray-300 dark:hover:bg-gray-600 text-[var(--color-text-primary)] font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-[var(--color-text-primary)] transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg shadow-lg;
+  }
+
+  .message-bubble {
+    @apply rounded-lg px-4 py-2 max-w-[80%] break-words;
+  }
+
+  .message-user {
+    @apply message-bubble bg-primary-600 text-white ml-auto;
+  }
+
+  .message-bot {
+    @apply message-bubble bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)];
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

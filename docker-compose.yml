@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # ================================
+  # LDAP Service
+  # ================================
+  ldap-service:
+    image: osixia/openldap:1.5.0
+    container_name: hr-ldap
+    hostname: ldap.serini.local
+    environment:
+      - LDAP_ORGANISATION=${LDAP_ORGANIZATION:-Serini Corporation}
+      - LDAP_DOMAIN=${LDAP_DOMAIN:-serini.local}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
+      - LDAP_CONFIG_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
+      - LDAP_RFC2307BIS_SCHEMA=true
+      - LDAP_REMOVE_CONFIG_AFTER_SETUP=true
+      - LDAP_TLS_VERIFY_CLIENT=never
+      - LDAP_TLS=false
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap/slapd.d
+    networks:
+      - hr-chatbot-network
+    healthcheck:
+      test: [ "CMD", "ldapsearch", "-x", "-H", "ldap://localhost", "-b", "dc=serini,dc=local", "-D", "cn=admin,dc=serini,dc=local", "-w", "${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # Backend API Service
+  # ================================
+  backend-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hr-backend
+    environment:
+      - LDAP_HOST=${LDAP_HOST:-ldap-service}
+      - LDAP_PORT=${LDAP_PORT:-389}
+      - LDAP_BASE_DN=${LDAP_BASE_DN:-dc=serini,dc=local}
+      - LDAP_ADMIN_DN=${LDAP_ADMIN_DN:-cn=admin,dc=serini,dc=local}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-to-a-secure-random-secret-key-in-production}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY:-change-this-to-another-secure-random-secret-key-in-production}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-7}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    ports:
+      - "8000:8000"
+    depends_on:
+      ldap-service:
+        condition: service_healthy
+    networks:
+      - hr-chatbot-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ================================
+  # Frontend UI Service
+  # ================================
+  frontend-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+    container_name: hr-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-api
+    networks:
+      - hr-chatbot-network
+    restart: unless-stopped
+
+networks:
+  hr-chatbot-network:
+    driver: bridge
+    name: hr-chatbot-network
+
+volumes:
+  ldap-data:
+    name: hr-ldap-data
+  ldap-config:
+    name: hr-ldap-config

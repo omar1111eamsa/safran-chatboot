@@ -1,0 +1,96 @@
+# Bootstrap LDIF for HR Chatbot - Serini Corporation
+# This file creates the organizational structure and test users
+
+# Create organizational units
+dn: ou=People,dc=serini,dc=local
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,dc=serini,dc=local
+objectClass: organizationalUnit
+ou: Groups
+
+# ================================
+# Test Users
+# ================================
+
+# User 1: Alice - CDI / Cadre
+dn: uid=alice,ou=People,dc=serini,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Alice Dupont
+sn: Dupont
+givenName: Alice
+uid: alice
+mail: alice.dupont@serini.local
+employeeType: CDI
+title: Cadre
+departmentNumber: IT
+userPassword: password
+
+# User 2: Bob - CDD / Non-Cadre
+dn: uid=bob,ou=People,dc=serini,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Bob Martin
+sn: Martin
+givenName: Bob
+uid: bob
+mail: bob.martin@serini.local
+employeeType: CDD
+title: Non-Cadre
+departmentNumber: Sales
+userPassword: password
+
+# User 3: Charlie - Intérim / Non-Cadre
+dn: uid=charlie,ou=People,dc=serini,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Charlie Bernard
+sn: Bernard
+givenName: Charlie
+uid: charlie
+mail: charlie.bernard@serini.local
+employeeType: Intérim
+title: Non-Cadre
+departmentNumber: Logistics
+userPassword: password
+
+# User 4: David - Stagiaire / Non-Cadre
+dn: uid=david,ou=People,dc=serini,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: David Petit
+sn: Petit
+givenName: David
+uid: david
+mail: david.petit@serini.local
+employeeType: Stagiaire
+title: Non-Cadre
+departmentNumber: Marketing
+userPassword: password
+
+# ================================
+# Groups (Optional - for future use)
+# ================================
+
+dn: cn=employees,ou=Groups,dc=serini,dc=local
+objectClass: groupOfNames
+cn: employees
+member: uid=alice,ou=People,dc=serini,dc=local
+member: uid=bob,ou=People,dc=serini,dc=local
+member: uid=charlie,ou=People,dc=serini,dc=local
+member: uid=david,ou=People,dc=serini,dc=local
+
+dn: cn=cadres,ou=Groups,dc=serini,dc=local
+objectClass: groupOfNames
+cn: cadres
+member: uid=alice,ou=People,dc=serini,dc=local
