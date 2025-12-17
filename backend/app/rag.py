@@ -38,7 +38,7 @@ class RAGEngine:
             
             # Load sentence transformer model
             logger.info("Loading sentence-transformer model...")
-            self.model = SentenceTransformer('all-MiniLM-L6-v2')
+            self.model = SentenceTransformer('all-mpnet-base-v2')
             logger.info("Model loaded successfully")
             
             # Pre-compute embeddings for all questions
@@ -51,43 +51,37 @@ class RAGEngine:
             logger.error(f"Error loading RAG engine: {str(e)}")
             raise
     
-    def get_answer(
+    def search_knowledge(
         self,
         question: str,
         employee_type: str,
-        title: str
-    ) -> Tuple[str, Optional[str]]:
+        threshold: float = 0.6
+    ) -> Tuple[Optional[str], Optional[str], float]:
         """
-        Get answer for user question based on their profile.
+        Search knowledge base for relevant answer.
         
         Args:
             question: User's question
-            employee_type: User's employment type (CDI, CDD, Intérim, Stagiaire)
-            title: User's title (Cadre, Non-Cadre)
+            employee_type: User's profile (CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE)
+            threshold: Minimum similarity score to consider answer relevant (0.0 to 1.0)
             
         Returns:
-            Tuple of (answer, domain) or error message if not found
+            Tuple of (answer, domain, similarity_score)
+            If similarity < threshold, returns (None, None, score)
         """
         if self.df is None or self.model is None or self.embeddings is None:
-            return "Le système n'est pas encore initialisé. Veuillez réessayer.", None
+            return None, None, 0.0
         
         try:
-            # Filter by profile (employeeType OR title)
-            # This allows matching on either employee type or title
-            filtered_df = self.df[
-                (self.df['profil'] == employee_type) | 
-                (self.df['profil'] == title)
-            ]
+            # Filter by profile - single attribute now
+            # Supports 6 profiles: CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE
+            filtered_df = self.df[self.df['profil'] == employee_type]
             
             if filtered_df.empty:
-                logger.warning(f"No entries found for profile: {employee_type}/{title}")
-                return (
-                    f"Désolé, je n'ai pas d'information spécifique pour votre profil ({employee_type}/{title}). "
-                    "Veuillez contacter le service RH.",
-                    None
-                )
+                logger.warning(f"No entries found for profile: {employee_type}")
+                return None, None, 0.0
             
-            # Get indices of filtered questions
+            # Get indices of filtered entries
             filtered_indices = filtered_df.index.tolist()
             filtered_embeddings = self.embeddings[filtered_indices]
             
@@ -101,25 +95,27 @@ class RAGEngine:
             best_match_idx = similarities.argmax().item()
             best_similarity = similarities[best_match_idx].item()
             
-            # Get the actual dataframe index
+            logger.info(f"Best match similarity: {best_similarity:.3f} (threshold: {threshold})")
+            
+            # Check if similarity meets threshold
+            if best_similarity < threshold:
+                logger.info(f"Similarity {best_similarity:.3f} below threshold {threshold}")
+                return None, None, best_similarity
+            
+            # Get the actual index in the original dataframe
             actual_idx = filtered_indices[best_match_idx]
             
-            # Log similarity score
-            logger.info(f"Best match similarity: {best_similarity:.4f}")
+            # Extract answer and domain
+            answer = str(self.df.loc[actual_idx, 'reponse'])
+            domain = str(self.df.loc[actual_idx, 'domaine'])
             
-            # Return answer and domain
-            answer = self.df.loc[actual_idx, 'reponse']
-            domain = self.df.loc[actual_idx, 'domaine']
+            logger.info(f"Found answer in domain '{domain}' with similarity {best_similarity:.3f}")
             
-            # Add confidence indicator if similarity is low
-            if best_similarity < 0.5:
-                answer = f"{answer}\n\n(Note: Cette réponse peut ne pas correspondre exactement à votre question. Contactez le service RH pour plus de précisions.)"
-            
-            return str(answer), str(domain)
+            return answer, domain, best_similarity
             
         except Exception as e:
             logger.error(f"Error in RAG search: {str(e)}")
-            return "Une erreur s'est produite lors de la recherche. Veuillez réessayer.", None
+            return None, None, 0.0
 
 
 # Global RAG engine instance

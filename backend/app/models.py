@@ -42,8 +42,7 @@ class UserProfile(BaseModel):
     username: str
     full_name: str
     email: str
-    employee_type: str  # CDI, CDD, Intérim, Stagiaire
-    title: str  # Cadre, Non-Cadre
+    employee_type: str  # CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE
     department: str
 
 

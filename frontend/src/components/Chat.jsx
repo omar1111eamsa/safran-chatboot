@@ -94,8 +94,7 @@ const Chat = () => {
                         <h1 className="text-2xl font-bold">Chatbot RH</h1>
                         {user && (
                             <p className="text-sm text-primary-100 dark:text-gray-300">
-                                Connecté en tant que {user.full_name} - {user.employee_type} /{' '}
-                                {user.title}
+                                Connecté en tant que {user.full_name} - {user.employee_type}
                             </p>
                         )}
                     </div>
@@ -127,14 +126,15 @@ const Chat = () => {
                             >
                                 <p className="whitespace-pre-wrap">{message.text}</p>
                                 {message.domain && (
-                                    <p className="text-xs mt-2 opacity-70">
-                                        Domaine: {message.domain}
-                                    </p>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+                                            📁 {message.domain}
+                                        </span>
+                                    </div>
                                 )}
                             </div>
                         </div>
                     ))}
-
                     {loading && (
                         <div className="flex justify-start animate-slide-up">
                             <div className="message-bot">

@@ -4,6 +4,7 @@ All configuration is loaded from environment variables.
 """
 
 from pydantic_settings import BaseSettings
+from pydantic import Field
 from typing import List
 
 
@@ -25,10 +26,14 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = 7
     
     # CORS Configuration
-    cors_origins: str = "http://localhost:5173,http://localhost:3000"
+    cors_origins: str = Field(default="http://localhost:5173") # Modified to use Field and updated default
+    
+    # Ollama LLM # Added Ollama configuration
+    ollama_base_url: str = Field(default="http://ollama:11434")
+    ollama_model: str = Field(default="llama3.2:3b")
     
     # Environment
-    environment: str = "development"
+    environment: str = Field(default="development") # Modified to use Field
     
     @property
     def cors_origins_list(self) -> List[str]:

@@ -26,31 +26,52 @@ services:
     networks:
       - hr-chatbot-network
     healthcheck:
-      test: [ "CMD", "ldapsearch", "-x", "-H", "ldap://localhost", "-b", "dc=serini,dc=local", "-D", "cn=admin,dc=serini,dc=local", "-w", "${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}" ]
+      test: [ "CMD-SHELL", "ldapsearch -x -H ldap://localhost -b dc=serini,dc=local -D 'cn=admin,dc=serini,dc=local' -w ${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!} || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   # ================================
+  # Ollama LLM Service
+  # ================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: hr-ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - hr-chatbot-network
+    healthcheck:
+      test: [ "CMD", "ollama", "list" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ================================
   # Backend API Service
   # ================================
   backend-api:
+    image: serini/safran-backend-api:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: hr-backend
     environment:
-      - LDAP_HOST=${LDAP_HOST:-ldap-service}
-      - LDAP_PORT=${LDAP_PORT:-389}
+      - LDAP_SERVER=${LDAP_SERVER:-ldap://ldap-service:389}
       - LDAP_BASE_DN=${LDAP_BASE_DN:-dc=serini,dc=local}
       - LDAP_ADMIN_DN=${LDAP_ADMIN_DN:-cn=admin,dc=serini,dc=local}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-to-a-secure-random-secret-key-in-production}
-      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY:-change-this-to-another-secure-random-secret-key-in-production}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-change-in-production}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY:-your-refresh-secret-key}
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-7}
-      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
       - ENVIRONMENT=${ENVIRONMENT:-development}
     ports:
       - "8000:8000"
@@ -70,6 +91,7 @@ services:
   # Frontend UI Service
   # ================================
   frontend-ui:
+    image: serini/safran-frontend-ui:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -94,3 +116,5 @@ volumes:
     name: hr-ldap-data
   ldap-config:
     name: hr-ldap-config
+  ollama-data:
+    name: hr-ollama-data

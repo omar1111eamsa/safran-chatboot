@@ -26,6 +26,7 @@ from .auth import (
 )
 from .ldap_service import ldap_service
 from .rag import rag_engine
+from .llm_service import OllamaService
 
 # Configure logging
 logging.basicConfig(
@@ -199,31 +200,53 @@ async def chat(
     current_user: UserProfile = Depends(get_current_user)
 ):
     """
-    Process user question and return answer from RAG engine.
+    Chat endpoint with Ollama LLM + RAG hybrid approach.
     
-    Args:
-        request: User question
-        current_user: Authenticated user from JWT token
-        
-    Returns:
-        Answer from knowledge base
+    Flow:
+    1. Search RAG knowledge base for relevant answer
+    2. If relevant (similarity > threshold), use Ollama with RAG context
+    3. If not relevant, use Ollama alone for general conversation
     """
     logger.info(
         f"Chat request from {current_user.username} "
-        f"({current_user.employee_type}/{current_user.title}): {request.message}"
+        f"({current_user.employee_type}): {request.message}"
     )
     
-    # Get answer from RAG engine
-    answer, domain = rag_engine.get_answer(
+    # Step 1: Search RAG knowledge base
+    rag_answer, domain, similarity = rag_engine.search_knowledge(
         question=request.message,
         employee_type=current_user.employee_type,
-        title=current_user.title
+        threshold=0.6  # Similarity threshold for relevance
     )
+    
+    # Step 2: Generate response with Ollama
+    ollama = OllamaService()
+    
+    if rag_answer and similarity >= 0.6:
+        # RAG found relevant answer - use it as context for Ollama
+        context = f"Domaine: {domain}\nRéponse de la base de connaissances: {rag_answer}"
+        logger.info(f"Using RAG context (similarity: {similarity:.3f})")
+        
+        response = ollama.generate_response(
+            question=request.message,
+            context=context,
+            profile=current_user.employee_type
+        )
+    else:
+        # No relevant RAG answer - Ollama generates response alone
+        logger.info(f"No relevant RAG answer (similarity: {similarity:.3f}), using Ollama alone")
+        domain = None
+        
+        response = ollama.generate_response(
+            question=request.message,
+            context=None,
+            profile=current_user.employee_type
+        )
     
     return ChatResponse(
         question=request.message,
-        answer=answer,
-        profile=f"{current_user.employee_type}/{current_user.title}",
+        answer=response,
+        profile=current_user.employee_type,
         domain=domain
     )
 
