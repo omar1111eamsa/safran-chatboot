@@ -94,7 +94,7 @@ const Chat = () => {
                         <h1 className="text-2xl font-bold">Chatbot RH</h1>
                         {user && (
                             <p className="text-sm text-primary-100 dark:text-gray-300">
-                                Connecté en tant que {user.full_name} - {user.employee_type}
+                                {user.full_name} - {user.employee_type} ({user.department})
                             </p>
                         )}
                     </div>

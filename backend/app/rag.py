@@ -55,67 +55,67 @@ class RAGEngine:
         self,
         question: str,
         employee_type: str,
-        threshold: float = 0.6
-    ) -> Tuple[Optional[str], Optional[str], float]:
+        threshold: float = 0.75
+    ) -> Tuple[Optional[str], Optional[str], float, bool]:
         """
         Search knowledge base for relevant answer.
         
         Args:
             question: User's question
-            employee_type: User's profile (CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE)
-            threshold: Minimum similarity score to consider answer relevant (0.0 to 1.0)
+            employee_type: User's profile (CDI, CDD, CADRE, etc.)
+            threshold: Minimum similarity score to consider answer relevant
             
         Returns:
-            Tuple of (answer, domain, similarity_score)
-            If similarity < threshold, returns (None, None, score)
+            Tuple of (answer, domain, similarity_score, profile_allowed)
+            - profile_allowed is True if the answer matches the user's profile
+            - If profile mismatch, returns (None, None, score, False)
         """
         if self.df is None or self.model is None or self.embeddings is None:
-            return None, None, 0.0
-        
+            logger.error("RAG engine not initialized")
+            return None, None, 0.0, True
+
         try:
-            # Filter by profile - single attribute now
-            # Supports 6 profiles: CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE
-            filtered_df = self.df[self.df['profil'] == employee_type]
-            
-            if filtered_df.empty:
-                logger.warning(f"No entries found for profile: {employee_type}")
-                return None, None, 0.0
-            
-            # Get indices of filtered entries
-            filtered_indices = filtered_df.index.tolist()
-            filtered_embeddings = self.embeddings[filtered_indices]
-            
             # Encode user question
             question_embedding = self.model.encode(question, convert_to_tensor=True)
             
-            # Compute cosine similarities
-            similarities = util.cos_sim(question_embedding, filtered_embeddings)[0]
+            # Compute cosine similarities with ALL entries (global search)
+            similarities = util.cos_sim(question_embedding, self.embeddings)[0]
             
             # Get best match
             best_match_idx = similarities.argmax().item()
             best_similarity = similarities[best_match_idx].item()
             
-            logger.info(f"Best match similarity: {best_similarity:.3f} (threshold: {threshold})")
+            logger.info(f"Best global match similarity: {best_similarity:.3f}")
             
             # Check if similarity meets threshold
             if best_similarity < threshold:
                 logger.info(f"Similarity {best_similarity:.3f} below threshold {threshold}")
-                return None, None, best_similarity
+                return None, None, best_similarity, True
             
-            # Get the actual index in the original dataframe
-            actual_idx = filtered_indices[best_match_idx]
+            # Get the best match entry
+            best_match = self.df.iloc[best_match_idx]
+            match_profile = str(best_match['profil'])
             
-            # Extract answer and domain
-            answer = str(self.df.loc[actual_idx, 'reponse'])
-            domain = str(self.df.loc[actual_idx, 'domaine'])
+            # Check profile authorization
+            # Compare normalized profiles (case insensitive)
+            if match_profile.strip().lower() != employee_type.strip().lower():
+                logger.warning(
+                    f"Profile mismatch! Question is for '{match_profile}', "
+                    f"user is '{employee_type}'"
+                )
+                return None, None, best_similarity, False
             
-            logger.info(f"Found answer in domain '{domain}' with similarity {best_similarity:.3f}")
+            # Profile matches, return answer
+            answer = str(best_match['reponse'])
+            domain = str(best_match['domaine'])
             
-            return answer, domain, best_similarity
+            logger.info(f"Found authorized answer in domain '{domain}' for profile '{match_profile}'")
+            
+            return answer, domain, best_similarity, True
             
         except Exception as e:
             logger.error(f"Error in RAG search: {str(e)}")
-            return None, None, 0.0
+            return None, None, 0.0, True
 
 
 # Global RAG engine instance

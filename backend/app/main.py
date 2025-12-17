@@ -203,26 +203,56 @@ async def chat(
     Chat endpoint with Ollama LLM + RAG hybrid approach.
     
     Flow:
-    1. Search RAG knowledge base for relevant answer
-    2. If relevant (similarity > threshold), use Ollama with RAG context
-    3. If not relevant, use Ollama alone for general conversation
+    1. Check if it's a greeting or conversational question → Ollama alone
+    2. Search RAG knowledge base for relevant answer (threshold 0.75)
+    3. If relevant (similarity ≥ 0.75), use Ollama with RAG context
+    4. If not relevant, use Ollama alone for general conversation
     """
+    from .llm_service import is_greeting, is_conversational
+    
     logger.info(
         f"Chat request from {current_user.username} "
         f"({current_user.employee_type}): {request.message}"
     )
     
-    # Step 1: Search RAG knowledge base
-    rag_answer, domain, similarity = rag_engine.search_knowledge(
-        question=request.message,
-        employee_type=current_user.employee_type,
-        threshold=0.6  # Similarity threshold for relevance
-    )
-    
-    # Step 2: Generate response with Ollama
+    # Initialize Ollama service
     ollama = OllamaService()
     
-    if rag_answer and similarity >= 0.6:
+    # Step 1: Check if it's a greeting or conversational question
+    if is_greeting(request.message) or is_conversational(request.message):
+        logger.info("Detected greeting/conversational - using Ollama alone")
+        response = ollama.generate_response(
+            question=request.message,
+            context=None,
+            profile=current_user.employee_type
+        )
+        
+        return ChatResponse(
+            question=request.message,
+            answer=response,
+            profile=current_user.employee_type,
+            domain=None  # No domain for greetings
+        )
+    
+    # Step 2: Search RAG knowledge base with higher threshold
+    rag_answer, domain, similarity, profile_allowed = rag_engine.search_knowledge(
+        question=request.message,
+        employee_type=current_user.employee_type,
+        threshold=0.75
+    )
+    
+    # Check for profile mismatch
+    if not profile_allowed:
+        logger.warning(f"Access denied for user {current_user.username} (profile: {current_user.employee_type})")
+        return ChatResponse(
+            question=request.message,
+            answer=f"Votre profil {current_user.employee_type} ne me permet pas de répondre à cette question.",
+            profile=current_user.employee_type,
+            domain=None
+        )
+    
+    # Step 3: Generate response with Ollama
+    if rag_answer and similarity >= 0.75:
         # RAG found relevant answer - use it as context for Ollama
         context = f"Domaine: {domain}\nRéponse de la base de connaissances: {rag_answer}"
         logger.info(f"Using RAG context (similarity: {similarity:.3f})")

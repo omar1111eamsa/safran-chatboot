@@ -54,7 +54,7 @@ services:
   # Backend API Service
   # ================================
   backend-api:
-    image: serini/safran-backend-api:latest
+    image: serini/safran-backend-api:v3.0
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -91,7 +91,7 @@ services:
   # Frontend UI Service
   # ================================
   frontend-ui:
-    image: serini/safran-frontend-ui:latest
+    image: serini/safran-frontend-ui:v3.0
     build:
       context: ./frontend
       dockerfile: Dockerfile

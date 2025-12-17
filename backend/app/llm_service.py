@@ -4,9 +4,64 @@ Ollama LLM Service for intelligent chatbot responses.
 import requests
 from typing import Optional
 import logging
+import re
 from app.config import settings
 
 logger = logging.getLogger(__name__)
+
+
+# Greeting and conversational patterns
+GREETING_PATTERNS = [
+    r'\b(bonjour|salut|hello|hey|bonsoir|coucou)\b',
+    r'\b(qui es-tu|qui êtes-vous|c\'est quoi ton nom|quel est ton nom)\b',
+    r'\b(comment (tu )?t\'appelles?|comment (vous )?vous appelez)\b',
+]
+
+CONVERSATIONAL_PATTERNS = [
+    r'\b(comment (vas-tu|allez-vous|ça va|ca va))\b',
+    r'\b(ça va|ca va)\??$',
+    r'\b(tu vas bien|vous allez bien)\b',
+]
+
+
+def is_greeting(message: str) -> bool:
+    """
+    Check if the message is a greeting or self-introduction question.
+    
+    Args:
+        message: User's message
+        
+    Returns:
+        True if it's a greeting, False otherwise
+    """
+    message_lower = message.lower().strip()
+    
+    for pattern in GREETING_PATTERNS:
+        if re.search(pattern, message_lower):
+            logger.info(f"Detected greeting: {message}")
+            return True
+    
+    return False
+
+
+def is_conversational(message: str) -> bool:
+    """
+    Check if the message is a conversational question (not HR-related).
+    
+    Args:
+        message: User's message
+        
+    Returns:
+        True if it's conversational, False otherwise
+    """
+    message_lower = message.lower().strip()
+    
+    for pattern in CONVERSATIONAL_PATTERNS:
+        if re.search(pattern, message_lower):
+            logger.info(f"Detected conversational question: {message}")
+            return True
+    
+    return False
 
 
 class OllamaService:
@@ -76,25 +131,28 @@ class OllamaService:
             logger.error(f"Ollama exception: {str(e)}")
             return "Désolé, une erreur s'est produite. Veuillez réessayer."
     
-    def _build_prompt_with_context(self, question: str, context: str, profile: str) -> str:
-        """Build prompt when RAG context is available."""
-        return f"""Tu es un assistant RH professionnel de l'entreprise Serini.
+    def _build_prompt_with_context(
+        self,
+        question: str,
+        context: str,
+        profile: str
+    ) -> str:
+        """Build prompt with RAG context."""
+        return f"""Tu es un assistant RH utile et précis pour l'entreprise Serini.
+Ton rôle est de répondre aux questions des employés en te basant UNIQUEMENT sur les informations fournies dans le contexte.
 
-Profil de l'utilisateur: {profile}
-
-Contexte de la base de connaissances RH:
+Contexte (Information officielle RH) :
 {context}
 
-Question de l'utilisateur: {question}
+Question de l'employé ({profile}) :
+{question}
 
-Instructions:
-- Réponds de manière naturelle, professionnelle et concise
-- Utilise le contexte fourni pour répondre précisément
-- Si le contexte ne répond pas exactement à la question, dis-le poliment
-- Reste dans le cadre des ressources humaines
-- Sois aimable et serviable
-
-Réponse:"""
+Instructions :
+1. Utilise l'information du contexte pour répondre.
+2. Formule une phrase complète, naturelle et polie (ex: "Bonjour...", "Voici l'information...").
+3. NE CHANGE PAS le sens de l'information officielle. Reste fidèle au contenu.
+4. Si l'information n'est pas claire, dis-le.
+"""
     
     def _build_prompt_without_context(self, question: str, profile: str) -> str:
         """Build prompt when no RAG context is available."""
