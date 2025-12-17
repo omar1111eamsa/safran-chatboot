@@ -1,344 +1,201 @@
-# 🤖 Chatbot RH - HR Assistant Application
+# HR Chatbot Intelligent (RAG + Ollama LLM)
 
-A complete microservices-based HR Chatbot application with LDAP authentication, RAG-powered Q&A, and a modern React UI with dark/light theme support.
+Application de chatbot RH d'entreprise intégrant un système hybride combinant l'intelligence artificielle générative (Ollama) et la recherche documentaire (RAG - Retrieval Augmented Generation) pour fournir des réponses contextuelles et précises aux employés.
 
-## 📋 Table of Contents
+![Status](https://img.shields.io/badge/Status-Active-success)
+![Docker](https://img.shields.io/badge/Docker-v24.0+-blue)
+![Python](https://img.shields.io/badge/Python-3.11-yellow)
+![Node](https://img.shields.io/badge/Node-20-green)
+![React](https://img.shields.io/badge/React-19-blue)
 
-- [Architecture](#architecture)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Configuration](#configuration)
-- [API Documentation](#api-documentation)
-- [Test Users](#test-users)
-- [Development](#development)
-- [Troubleshooting](#troubleshooting)
-- [Production Deployment](#production-deployment)
+---
 
-## 🏗️ Architecture
+## Sommaire
 
-The application consists of three microservices:
+1. [Aperçu Technique](#aperçu-technique)
+2. [Stack Technologique et Versions](#stack-technologique-et-versions)
+3. [Fonctionnalités Principales](#fonctionnalités-principales)
+4. [Installation via Docker Hub (Production/Test)](#installation-via-docker-hub-productiontest)
+5. [Installation via GitHub (Développement)](#installation-via-github-développement)
+6. [Installation Manuelle (Code Source)](#installation-manuelle-code-source)
+7. [Configuration et Initialisation](#configuration-et-initialisation)
+8. [Utilisation et Scénarios de Test](#utilisation-et-scénarios-de-test)
 
-```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│                 │      │                 │      │                 │
-│  Frontend UI    │─────▶│  Backend API    │─────▶│  LDAP Service   │
-│  (React+Vite)   │      │  (FastAPI)      │      │  (OpenLDAP)     │
-│  Port: 5173     │      │  Port: 8000     │      │  Port: 389      │
-│                 │      │                 │      │                 │
-└─────────────────┘      └─────────────────┘      └─────────────────┘
-                                │
-                                │
-                         ┌──────▼──────┐
-                         │             │
-                         │  RAG Engine │
-                         │  (Sentence  │
-                         │ Transformers)│
-                         │             │
-                         └─────────────┘
-```
+---
 
-### Components
+## Aperçu Technique
 
-1. **LDAP Service** (`ldap-service`)
-   - OpenLDAP directory server
-   - Domain: `serini.local`
-   - Pre-populated with test users
-   - Stores user profiles (employeeType, title, department)
+Ce projet implémente une architecture micro-services pour servir un chatbot intelligent capable de distinguer les questions nécessitant des connaissances spécifiques à l'entreprise (traitées par RAG) des interactions conversationnelles générales (traitées par LLM).
 
-2. **Backend API** (`backend-api`)
-   - FastAPI REST API
-   - JWT authentication (access + refresh tokens)
-   - LDAP integration for user authentication
-   - RAG engine for semantic Q&A
-   - Profile-based answer filtering
+L'architecture repose sur :
+- **Frontend** : Interface utilisateur React moderne.
+- **Backend** : API FastAPI gérant l'orchestration entre le moteur RAG et le service LLM.
+- **Services de Données** :
+  - **OpenLDAP** : Gestion des identités et des profils utilisateurs.
+  - **Ollama** : Exécution locale du modèle de langage (Llama 3.2).
+  - **Base Vectorielle** : Moteur RAG interne (basé sur FAISS/Pandas et Sentence Transformers).
 
-3. **Frontend UI** (`frontend-ui`)
-   - React 18 with Vite
-   - TailwindCSS with dark/light theme
-   - Real-time chat interface
-   - Automatic token refresh
+---
 
-## ✨ Features
+## Stack Technologique et Versions
 
-- 🔐 **Secure Authentication**: LDAP-based authentication with JWT tokens
-- 🔄 **Token Refresh**: Automatic access token refresh using refresh tokens
-- 🧠 **Smart Q&A**: RAG-powered semantic search with sentence-transformers
-- 👤 **Profile-Based Filtering**: Answers filtered by user's employment type and title
-- 🌓 **Dark/Light Theme**: User-selectable theme with localStorage persistence
-- 📱 **Responsive Design**: Works on desktop, tablet, and mobile
-- 🐳 **Containerized**: Fully Dockerized for easy deployment
-- 🔒 **Secure**: CORS protection, httpOnly cookies, secure headers
+### Backend (Python/FastAPI)
+- **Langage** : Python 3.11
+- **Framework Web** : `fastapi==0.109.0`
+- **Serveur d'Application** : `uvicorn[standard]==0.27.0`
+- **Sécurité & Auth** :
+  - `python-jose==3.3.0` (Gestion JWT)
+  - `passlib==1.7.4` (Hachage)
+  - `ldap3==2.9.1` (Connecteur LDAP)
+- **IA & RAG** :
+  - `sentence-transformers==2.3.1` (Modèle d'embedding : `all-mpnet-base-v2`)
+  - `pandas==2.1.4` (Manipulation de données)
+  - `numpy==1.26.3` (Calcul scientifique)
+  - `scikit-learn==1.4.0` (Similarité cosinus)
+- **Client LLM** : `requests==2.31.0`
+- **Validation de Données** : `pydantic==2.5.3`
 
-## 📦 Prerequisites
+### Frontend (React/Vite)
+- **Runtime** : Node.js 20 (Base Alpine Linux)
+- **Bibliothèque UI** : React 19.2.0 (`react`, `react-dom`)
+- **Build System** : Vite 7.2.4
+- **Routage** : React Router 7.10.1 (`react-router-dom`)
+- **Client HTTP** : Axios 1.13.2
+- **Styling** : TailwindCSS 3.4.19 (`postcss`, `autoprefixer`)
 
-- Docker Engine 20.10+
-- Docker Compose 2.0+
-- 4GB RAM minimum
-- Ports available: 389, 636, 5173, 8000
+### Infrastructure
+- **LLM** : Ollama (Image Docker : `ollama/ollama:latest`)
+  - Modèle : `llama3.2:3b`
+- **Annuaire** : OpenLDAP (Image Docker : `osixia/openldap:1.5.0`)
+- **Orchestration** : Docker Compose v2.20+
+- **Serveur Web Frontend** : Nginx (Alpine)
 
-## 🚀 Quick Start
+---
 
-### 1. Clone and Setup
+## Fonctionnalités Principales
+
+1.  **Orchestration Hybride (RAG + LLM)** : Le système évalue la pertinence de la question par rapport à la base de connaissances interne. Si le score de similarité dépasse le seuil (0.6), le contexte est injecté dans le prompt du LLM. Sinon, le LLM répond en mode conversationnel standard.
+2.  **Gestion Granulaire des Profils** : Prise en charge de 6 statuts employés distincts (CDI, CDD, Cadre, Non-Cadre, Intérimaire, Stagiaire) influençant les réponses fournies.
+3.  **Interface Utilisateur Réactive** : Application Single Page (SPA) avec support natif du mode sombre.
+4.  **Authentification Centralisée** : Simulation d'un environnement d'entreprise via connexion LDAP sécurisée.
+
+---
+
+## Installation via Docker Hub (Production/Test)
+
+Cette méthode est recommandée pour un déploiement rapide sans compilation locale.
+
+### Prérequis
+- Docker Engine et Docker Compose installés.
+
+### Procédure
+
+1.  Créer un fichier `docker-compose.yml` avec le contenu suivant :
+
+    ```yaml
+    services:
+      backend-api:
+        image: serini/safran-backend-api:v2.0
+        ports:
+          - "8000:8000"
+        depends_on:
+          ldap-service:
+            condition: service_healthy
+          ollama:
+            condition: service_healthy
+        environment:
+          - LDAP_HOST=ldap-service
+          - OLLAMA_BASE_URL=http://ollama:11434
+          - OLLAMA_MODEL=llama3.2:3b
+
+      frontend-ui:
+        image: serini/safran-frontend-ui:v2.0
+        ports:
+          - "5173:80"
+        depends_on:
+          - backend-api
+
+      ldap-service:
+        image: osixia/openldap:1.5.0
+        ports:
+          - "389:389"
+          - "636:636"
+        environment:
+          - LDAP_ORGANISATION=Serini
+          - LDAP_DOMAIN=serini.local
+          - LDAP_ADMIN_PASSWORD=SecureAdminPass123!
+          - LDAP_TLS=false
+        healthcheck:
+          test: ["CMD", "ldapsearch", "-x", "-H", "ldap://localhost", "-b", "", "-s", "base"]
+          interval: 30s
+          retries: 5
+
+      ollama:
+        image: ollama/ollama:latest
+        ports:
+          - "11434:11434"
+        volumes:
+          - ollama-data:/root/.ollama
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+          interval: 30s
+          retries: 3
+
+    volumes:
+      ollama-data:
+    ```
+
+2.  Démarrer l'environnement :
+    ```bash
+    docker compose up -d
+    ```
+
+3.  Procéder à la [Configuration et Initialisation](#configuration-et-initialisation).
+
+---
+
+## Installation via GitHub (Développement)
+
+Pour contribuer au projet ou modifier la configuration.
+
+1.  Cloner le dépôt :
+    ```bash
+    git clone https://github.com/votre-user/safran-chatbot.git
+    cd safran-chatbot
+    ```
+
+2.  Construire et démarrer les services :
+    ```bash
+    docker compose up -d --build
+    ```
+
+3.  Procéder à la [Configuration et Initialisation](#configuration-et-initialisation).
+
+---
+
+## Installation Manuelle (Code Source)
+
+Exécution locale des applications (Backend et Frontend) hors conteneurs.
+*Note : Il est fortement recommandé d'utiliser Docker pour les services LDAP et Ollama.*
+
+### 1. Démarrage des Services Dépendants (Docker)
 
 ```bash
-cd /home/omar/myWork/safran
+docker compose up -d ldap-service ollama
 ```
 
-### 2. Create Environment File
-
-```bash
-cp .env.example .env
-```
-
-**Important**: Edit `.env` and change the JWT secret keys for production:
-
-```bash
-# Generate secure random keys
-openssl rand -hex 32  # Use for JWT_SECRET_KEY
-openssl rand -hex 32  # Use for JWT_REFRESH_SECRET_KEY
-```
-
-### 3. Start All Services
-
-```bash
-docker compose up -d
-```
-
-This will:
-- Build the backend and frontend images
-- Start LDAP service
-- Initialize the RAG engine
-- Start all services
-
-### 4. Setup LDAP Users
-
-After the services are running, populate LDAP with test users:
-
-```bash
-./setup-ldap.sh
-```
-
-This script will:
-- Copy the bootstrap LDIF file to the LDAP container
-- Create organizational units (People, Groups)
-- Add 4 test users with their profiles
-- Create user groups
-
-### 5. Verify Services
-
-```bash
-# Check all services are running
-docker compose ps
-
-# Check backend logs
-docker compose logs backend-api
-
-# Check LDAP logs
-docker compose logs ldap-service
-```
-
-### 5. Access the Application
-
-Open your browser and navigate to:
-
-```
-http://localhost:5173
-```
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-All configuration is managed through environment variables in `.env`:
-
-#### LDAP Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `LDAP_HOST` | `ldap-service` | LDAP server hostname |
-| `LDAP_PORT` | `389` | LDAP server port |
-| `LDAP_DOMAIN` | `serini.local` | LDAP domain |
-| `LDAP_BASE_DN` | `dc=serini,dc=local` | LDAP base DN |
-| `LDAP_ADMIN_DN` | `cn=admin,dc=serini,dc=local` | LDAP admin DN |
-| `LDAP_ADMIN_PASSWORD` | `SecureAdminPass123!` | LDAP admin password |
-
-#### JWT Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `JWT_SECRET_KEY` | *(change in production)* | Secret key for access tokens |
-| `JWT_REFRESH_SECRET_KEY` | *(change in production)* | Secret key for refresh tokens |
-| `JWT_ALGORITHM` | `HS256` | JWT signing algorithm |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | `60` | Access token validity (1 hour) |
-| `REFRESH_TOKEN_EXPIRE_DAYS` | `7` | Refresh token validity (7 days) |
-
-#### CORS Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CORS_ORIGINS` | `http://localhost:5173,http://localhost:3000` | Allowed CORS origins |
-
-#### Frontend Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VITE_API_BASE_URL` | `http://localhost:8000` | Backend API URL |
-
-## 📚 API Documentation
-
-### Authentication Endpoints
-
-#### POST `/api/auth/login`
-
-Authenticate user and receive tokens.
-
-**Request:**
-```json
-{
-  "username": "alice",
-  "password": "password"
-}
-```
-
-**Response:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
-  "token_type": "bearer"
-}
-```
-
-#### POST `/api/auth/refresh`
-
-Refresh access token using refresh token.
-
-**Request:**
-```json
-{
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs..."
-}
-```
-
-**Response:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
-  "token_type": "bearer"
-}
-```
-
-### User Endpoints
-
-#### GET `/api/profile`
-
-Get current user profile (requires authentication).
-
-**Headers:**
-```
-Authorization: Bearer <access_token>
-```
-
-**Response:**
-```json
-{
-  "username": "alice",
-  "full_name": "Alice Dupont",
-  "email": "alice.dupont@serini.local",
-  "employee_type": "CDI",
-  "title": "Cadre",
-  "department": "IT"
-}
-```
-
-### Chat Endpoints
-
-#### POST `/api/chat`
-
-Send message to chatbot (requires authentication).
-
-**Headers:**
-```
-Authorization: Bearer <access_token>
-```
-
-**Request:**
-```json
-{
-  "message": "Comment poser un congé annuel ?"
-}
-```
-
-**Response:**
-```json
-{
-  "question": "Comment poser un congé annuel ?",
-  "answer": "La demande se fait via le portail RH au moins 7 jours à l'avance",
-  "profile": "CDI/Cadre",
-  "domain": "Congés"
-}
-```
-
-### Health Check
-
-#### GET `/health`
-
-Check API health status.
-
-**Response:**
-```json
-{
-  "status": "healthy",
-  "environment": "development"
-}
-```
-
-## 👥 Test Users
-
-The LDAP service is pre-populated with the following test users:
-
-| Username | Password | Employee Type | Title | Department |
-|----------|----------|---------------|-------|------------|
-| `alice` | `password` | CDI | Cadre | IT |
-| `bob` | `password` | CDD | Non-Cadre | Sales |
-| `charlie` | `password` | Intérim | Non-Cadre | Logistics |
-| `david` | `password` | Stagiaire | Non-Cadre | Marketing |
-
-### Testing Profile-Based Filtering
-
-1. Login as **alice** (CDI/Cadre)
-   - Ask: "Comment poser un congé annuel ?"
-   - Expected: CDI-specific answer
-
-2. Login as **bob** (CDD/Non-Cadre)
-   - Ask: "Ai-je droit aux congés payés ?"
-   - Expected: CDD-specific answer
-
-3. Login as **charlie** (Intérim)
-   - Ask: "Ai-je accès au transport ?"
-   - Expected: Intérim-specific answer
-
-4. Login as **david** (Stagiaire)
-   - Ask: "Ai-je accès à la cantine ?"
-   - Expected: Stagiaire-specific answer
-
-## 🛠️ Development
-
-### Running Services Individually
-
-#### Backend Only
+### 2. Backend (Python)
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Activation: source venv/bin/activate (Linux/Mac) ou venv\Scripts\activate (Windows)
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --port 8000
 ```
+*Assurez-vous que les variables d'environnement pointent vers localhost pour LDAP et Ollama.*
 
-#### Frontend Only
+### 3. Frontend (Node.js)
 
 ```bash
 cd frontend
@@ -346,184 +203,64 @@ npm install
 npm run dev
 ```
 
-### Viewing Logs
+---
 
+## Configuration et Initialisation
+
+Une fois les conteneurs ou services démarrés, il est impératif d'initialiser le modèle d'IA et les données de test.
+
+### 1. Téléchargement du Modèle LLM
+
+Le modèle `llama3.2:3b` (environ 2 Go) doit être téléchargé dans le conteneur Ollama.
+
+**Via script (si disponible localement) :**
 ```bash
-# All services
-docker compose logs -f
-
-# Specific service
-docker compose logs -f backend-api
-docker compose logs -f frontend-ui
-docker compose logs -f ldap-service
+./setup-ollama.sh
 ```
 
-### Rebuilding Services
-
+**Via commande Docker manuelle :**
 ```bash
-# Rebuild all services
-docker compose up -d --build
-
-# Rebuild specific service
-docker compose up -d --build backend-api
+docker exec -it <nom_conteneur_ollama> ollama pull llama3.2:3b
 ```
 
-### Stopping Services
+### 2. Population de l'Annuaire LDAP
 
+Création de la structure organisationnelle et des utilisateurs de test.
+
+**Via script :**
 ```bash
-# Stop all services
-docker compose down
-
-# Stop and remove volumes (WARNING: deletes LDAP data)
-docker compose down -v
+./setup-ldap.sh
 ```
 
-## 🔧 Troubleshooting
+### Comptes de Test Disponibles
 
-### LDAP Connection Issues
-
-**Problem**: Backend cannot connect to LDAP
-
-**Solution**:
-```bash
-# Check LDAP service is running
-docker compose ps ldap-service
-
-# Test LDAP connection
-docker exec -it hr-ldap ldapsearch -x -H ldap://localhost \
-  -b "dc=serini,dc=local" \
-  -D "cn=admin,dc=serini,dc=local" \
-  -w "SecureAdminPass123!"
-
-# Check LDAP logs
-docker compose logs ldap-service
-```
-
-### Backend API Not Starting
-
-**Problem**: Backend fails to start
-
-**Solution**:
-```bash
-# Check backend logs
-docker compose logs backend-api
-
-# Common issues:
-# 1. LDAP service not ready - wait for health check
-# 2. Missing CSV file - check backend/data/knowledge_base.csv exists
-# 3. Model download failed - check internet connection
-```
-
-### Frontend Cannot Connect to Backend
-
-**Problem**: API calls fail with CORS or network errors
-
-**Solution**:
-1. Check `VITE_API_BASE_URL` in `.env`
-2. Verify backend is running: `curl http://localhost:8000/health`
-3. Check browser console for CORS errors
-4. Verify `CORS_ORIGINS` includes frontend URL
-
-### Token Refresh Not Working
-
-**Problem**: User gets logged out unexpectedly
-
-**Solution**:
-1. Check JWT secret keys match in backend
-2. Verify token expiration times in `.env`
-3. Check browser localStorage for tokens
-4. Review backend logs for token validation errors
-
-### Dark Mode Not Persisting
-
-**Problem**: Theme resets on page refresh
-
-**Solution**:
-1. Check browser localStorage (should have `theme` key)
-2. Clear browser cache and try again
-3. Verify JavaScript is enabled
-
-## 🚀 Production Deployment
-
-### Security Checklist
-
-- [ ] Change `JWT_SECRET_KEY` and `JWT_REFRESH_SECRET_KEY`
-- [ ] Change `LDAP_ADMIN_PASSWORD`
-- [ ] Update `CORS_ORIGINS` to production domains
-- [ ] Enable HTTPS/TLS for all services
-- [ ] Use secure LDAP (LDAPS) on port 636
-- [ ] Set `ENVIRONMENT=production`
-- [ ] Configure proper firewall rules
-- [ ] Set up monitoring and logging
-- [ ] Configure backup for LDAP data
-
-### Docker Compose Production
-
-```yaml
-# docker compose.prod.yml
-version: '3.8'
-
-services:
-  backend-api:
-    restart: always
-    environment:
-      - ENVIRONMENT=production
-    # Add production-specific configs
-
-  frontend-ui:
-    restart: always
-    # Add production-specific configs
-
-  ldap-service:
-    restart: always
-    # Add production-specific configs
-```
-
-### Deployment Steps
-
-1. **Prepare Environment**
-   ```bash
-   cp .env.example .env.production
-   # Edit .env.production with production values
-   ```
-
-2. **Build Images**
-   ```bash
-   docker compose -f docker compose.yml --env-file .env.production build
-   ```
-
-3. **Deploy**
-   ```bash
-   docker compose -f docker compose.yml --env-file .env.production up -d
-   ```
-
-4. **Verify**
-   ```bash
-   docker compose ps
-   curl https://your-domain.com/health
-   ```
-
-### Scaling
-
-To scale the backend:
-
-```bash
-docker compose up -d --scale backend-api=3
-```
-
-Add a load balancer (nginx, traefik) in front of backend instances.
-
-## 📝 License
-
-This project is for demonstration purposes.
-
-## 🤝 Support
-
-For issues or questions:
-1. Check the [Troubleshooting](#troubleshooting) section
-2. Review Docker logs: `docker compose logs`
-3. Check API documentation: http://localhost:8000/docs
+| Identifiant | Mot de passe | Profil |
+|-------------|--------------|--------|
+| **alice**   | password     | CDI / Cadre |
+| **bob**     | password     | CDD / Non-Cadre |
+| **charlie** | password     | Intérimaire |
+| **david**   | password     | Stagiaire |
 
 ---
 
-**Built with**: FastAPI, React, OpenLDAP, Sentence Transformers, Docker
+## Utilisation et Scénarios de Test
+
+Accès à l'application : **http://localhost:5173**
+
+### Scénarios de Validation
+
+1.  **Interaction Conversationnelle (LLM)**
+    - **Entrée** : "Bonjour, qui êtes-vous ?"
+    - **Comportement attendu** : Réponse fluide générée par le LLM sans consultation de la base documentaire.
+
+2.  **Requête Métier (RAG + LLM)**
+    - **Entrée** : "Quelle est la procédure pour poser des congés ?"
+    - **Comportement attendu** : Identification du contexte RH, récupération des règles spécifiques, et génération d'une réponse précise incluant les démarches (Portail RH, délais).
+
+3.  **Filtrage de Domaine**
+    - **Entrée** : "Quel est le score du match d'hier ?"
+    - **Comportement attendu** : Le système identifie la question comme hors-sujet RH et décline poliment la réponse.
+
+---
+
+**Développé par l'équipe d'ingénierie Serini**

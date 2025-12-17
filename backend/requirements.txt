@@ -22,3 +22,4 @@ scikit-learn==1.4.0
 
 # Environment and utilities
 python-dotenv==1.0.0
+requests==2.31.0
