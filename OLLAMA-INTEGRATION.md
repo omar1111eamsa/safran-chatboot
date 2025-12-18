@@ -1,39 +1,39 @@
-# 🤖 Intégration Ollama LLM - Guide Complet
+# Intégration Ollama LLM - Guide Complet
 
-## ✅ Modifications Effectuées
+## Modifications Effectuées
 
 ### 1. Infrastructure (docker-compose.yml)
-- ✅ Ajout du service `ollama` avec image officielle
-- ✅ Volume `ollama-data` pour persistance du modèle
-- ✅ Port 11434 exposé
-- ✅ Backend dépend maintenant d'Ollama
+- [x] Ajout du service `ollama` avec image officielle
+- [x] Volume `ollama-data` pour persistance du modèle
+- [x] Port 11434 exposé
+- [x] Backend dépend maintenant d'Ollama
 
 ### 2. Backend - Nouveau Service LLM
-- ✅ Créé `backend/app/llm_service.py`
-- ✅ Classe `OllamaService` pour générer des réponses intelligentes
-- ✅ Prompts contextuels (avec/sans RAG)
+- [x] Créé `backend/app/llm_service.py`
+- [x] Classe `OllamaService` pour générer des réponses intelligentes
+- [x] Prompts contextuels (avec/sans RAG)
 
 ### 3. Backend - RAG Amélioré
-- ✅ Méthode `search_knowledge()` avec seuil de similarité
-- ✅ Retourne score de similarité (0.0 à 1.0)
-- ✅ Seuil par défaut: 0.6
+- [x] Méthode `search_knowledge()` avec seuil de similarité
+- [x] Retourne score de similarité (0.0 à 1.0)
+- [x] Seuil par défaut: 0.6
 
 ### 4. Backend - Endpoint Chat Hybride
-- ✅ Recherche RAG d'abord
-- ✅ Si pertinent (>0.6): Ollama + contexte RAG
-- ✅ Si non pertinent: Ollama seul
+- [x] Recherche RAG d'abord
+- [x] Si pertinent (>0.6): Ollama + contexte RAG
+- [x] Si non pertinent: Ollama seul
 
 ### 5. Configuration
-- ✅ Variables d'environnement Ollama ajoutées
-- ✅ `OLLAMA_BASE_URL=http://ollama:11434`
-- ✅ `OLLAMA_MODEL=llama3.2:3b`
+- [x] Variables d'environnement Ollama ajoutées
+- [x] `OLLAMA_BASE_URL=http://ollama:11434`
+- [x] `OLLAMA_MODEL=llama3.2:3b`
 
 ### 6. Scripts
-- ✅ `setup-ollama.sh` pour télécharger le modèle
+- [x] `setup-ollama.sh` pour télécharger le modèle
 
 ---
 
-## 🚀 Déploiement
+## Déploiement
 
 ### Étape 1: Arrêter les Services Actuels
 ```bash
@@ -75,7 +75,7 @@ docker exec -it hr-ollama ollama run llama3.2:3b "Bonjour"
 
 ---
 
-## 🎯 Exemples de Comportement
+## Exemples de Comportement
 
 ### Exemple 1: Salutation
 **Utilisateur**: "Bonjour"
@@ -141,7 +141,7 @@ docker exec -it hr-ollama ollama run llama3.2:3b "Bonjour"
 
 ---
 
-## 🔧 Configuration Avancée
+## Configuration Avancée
 
 ### Changer de Modèle
 
@@ -182,7 +182,7 @@ rag_answer, domain, similarity = rag_engine.search_knowledge(
 
 ---
 
-## 📊 Ressources Système
+## Ressources Système
 
 ### Avant (Sans Ollama)
 - RAM: ~2 GB
@@ -196,14 +196,14 @@ rag_answer, domain, similarity = rag_engine.search_knowledge(
 
 | Modèle | Taille | RAM | Qualité | Vitesse |
 |--------|--------|-----|---------|---------|
-| llama3.2:1b | 1 GB | 2 GB | ⭐⭐⭐ | ⚡⚡⚡⚡⚡ |
-| **llama3.2:3b** | 2 GB | 4 GB | ⭐⭐⭐⭐ | ⚡⚡⚡⚡ |
-| mistral:7b | 4 GB | 8 GB | ⭐⭐⭐⭐⭐ | ⚡⚡⚡ |
-| llama3.1:8b | 4.7 GB | 8 GB | ⭐⭐⭐⭐⭐ | ⚡⚡ |
+| llama3.2:1b | 1 GB | 2 GB | 3/5 | 5/5 |
+| **llama3.2:3b** | 2 GB | 4 GB | 4/5 | 4/5 |
+| mistral:7b | 4 GB | 8 GB | 5/5 | 3/5 |
+| llama3.1:8b | 4.7 GB | 8 GB | 5/5 | 2/5 |
 
 ---
 
-## 🐛 Dépannage
+## Dépannage
 
 ### Ollama ne démarre pas
 ```bash
@@ -246,31 +246,31 @@ docker exec hr-backend curl http://ollama:11434/api/tags
 
 ---
 
-## ✨ Avantages de Cette Approche
+## Avantages de Cette Approche
 
 ### 1. Intelligence Contextuelle
-- ✅ Comprend les salutations
-- ✅ Peut refuser poliment les questions hors-sujet
-- ✅ Conversations naturelles
+- [x] Comprend les salutations
+- [x] Peut refuser poliment les questions hors-sujet
+- [x] Conversations naturelles
 
 ### 2. Précision RH
-- ✅ Utilise la base de connaissances quand pertinent
-- ✅ Cite les domaines (congés, paie, etc.)
-- ✅ Filtre par profil utilisateur
+- [x] Utilise la base de connaissances quand pertinent
+- [x] Cite les domaines (congés, paie, etc.)
+- [x] Filtre par profil utilisateur
 
 ### 3. Flexibilité
-- ✅ Peut gérer plusieurs tours de conversation
-- ✅ S'adapte au contexte
-- ✅ Reformule les réponses de façon naturelle
+- [x] Peut gérer plusieurs tours de conversation
+- [x] S'adapte au contexte
+- [x] Reformule les réponses de façon naturelle
 
 ### 4. Local et Sécurisé
-- ✅ Pas d'API externe
-- ✅ Données privées (RGPD)
-- ✅ Gratuit (pas de coût API)
+- [x] Pas d'API externe
+- [x] Données privées (RGPD)
+- [x] Gratuit (pas de coût API)
 
 ---
 
-## 📝 Commandes Utiles
+## Commandes Utiles
 
 ```bash
 # Tester Ollama en interactif
@@ -294,13 +294,13 @@ docker compose restart
 
 ---
 
-## 🎉 Résultat Final
+## Résultat Final
 
 Votre chatbot RH est maintenant **intelligent** et peut:
-- ✅ Saluer les utilisateurs
-- ✅ Répondre aux questions RH avec précision
-- ✅ Refuser poliment les questions hors-sujet
-- ✅ Avoir des conversations naturelles
-- ✅ Utiliser la base de connaissances quand pertinent
+- [x] Saluer les utilisateurs
+- [x] Répondre aux questions RH avec précision
+- [x] Refuser poliment les questions hors-sujet
+- [x] Avoir des conversations naturelles
+- [x] Utiliser la base de connaissances quand pertinent
 
-**Fini les réponses aléatoires pour "bonjour" !** 🎊
+**Fini les réponses aléatoires pour "bonjour" !**

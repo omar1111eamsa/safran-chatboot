@@ -1,5 +1,14 @@
 /**
- * Chat component
+ * Chat Component
+ * 
+ * Main chat interface for the HR Chatbot application.
+ * Features:
+ * - Real-time messaging with RAG-powered responses
+ * - Domain badge display for knowledge base answers
+ * - User profile display in header
+ * - Auto-scrolling message list
+ * - Loading states and animations
+ * - Theme toggle and logout functionality
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -128,7 +137,7 @@ const Chat = () => {
                                 {message.domain && (
                                     <div className="mt-2 flex items-center gap-2">
                                         <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-                                            📁 {message.domain}
+                                            Domain: {message.domain}
                                         </span>
                                     </div>
                                 )}

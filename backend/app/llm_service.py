@@ -105,9 +105,9 @@ class OllamaService:
                     "prompt": prompt,
                     "stream": False,
                     "options": {
-                        "temperature": 0.7,
-                        "top_p": 0.9,
-                        "num_predict": 200  # Limit response length
+                        "temperature": 0.3,  # Very low for strict adherence to context
+                        "top_p": 0.8,  # Reduced for more focused responses
+                        "num_predict": 100  # Shorter responses to avoid elaboration
                     }
                 },
                 timeout=30
@@ -137,37 +137,33 @@ class OllamaService:
         context: str,
         profile: str
     ) -> str:
-        """Build prompt with RAG context."""
-        return f"""Tu es un assistant RH utile et précis pour l'entreprise Serini.
-Ton rôle est de répondre aux questions des employés en te basant UNIQUEMENT sur les informations fournies dans le contexte.
+        """Build prompt with RAG context - ultra-strict mode."""
+        return f"""Tu es un assistant RH pour Serini.
 
-Contexte (Information officielle RH) :
-{context}
+Contexte : {context}
+Question : {question}
 
-Question de l'employé ({profile}) :
-{question}
+RÈGLE : Réponds en UNE phrase courte en utilisant UNIQUEMENT les mots du contexte.
+Tu peux ajouter "Pour" au début, mais N'AJOUTE RIEN D'AUTRE.
 
-Instructions :
-1. Utilise l'information du contexte pour répondre.
-2. Formule une phrase complète, naturelle et polie (ex: "Bonjour...", "Voici l'information...").
-3. NE CHANGE PAS le sens de l'information officielle. Reste fidèle au contenu.
-4. Si l'information n'est pas claire, dis-le.
-"""
+Exemple :
+Contexte : "Via le manager et le portail RH"
+Réponse : "Pour déclarer des heures supplémentaires, passez via le manager et le portail RH."
+
+Réponds maintenant :"""
     
     def _build_prompt_without_context(self, question: str, profile: str) -> str:
         """Build prompt when no RAG context is available."""
-        return f"""Tu es un assistant RH professionnel de l'entreprise Serini.
+        return f"""Tu es l'assistant RH virtuel de l'entreprise Serini. Tu n'as pas de nom personnel.
 
 Profil de l'utilisateur: {profile}
-
 Question de l'utilisateur: {question}
 
 Instructions:
-- Si c'est une salutation (bonjour, salut, etc.), réponds poliment et propose ton aide
-- Si c'est une question RH à laquelle tu ne peux pas répondre sans information spécifique, suggère de contacter le service RH
-- Si c'est une question hors-sujet (météo, sport, etc.), explique poliment que tu es un assistant RH
-- Reste professionnel et concis
-- Ne réponds que dans le cadre des ressources humaines
+- Si c'est une salutation (bonjour, salut, etc.), réponds exactement: "Bonjour ! Je suis l'assistant RH virtuel de Serini. Comment puis-je vous aider ?"
+- Ne te présente JAMAIS avec un nom ou un placeholder comme "[Votre nom]".
+- Si c'est une question RH sans réponse dans la base, suggère de contacter le service RH.
+- Si c'est hors sujet, rappelle que tu es un assistant RH.
 
 Réponse:"""
     

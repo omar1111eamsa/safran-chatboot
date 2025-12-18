@@ -1,4 +1,4 @@
-# 🐳 Push Docker Hub - Guide de Versioning
+# Push Docker Hub - Guide de Versioning
 
 ## Stratégie de Versioning
 
@@ -11,14 +11,14 @@
 
 ### Avantages
 
-- ✅ **v1.0 préservée**: L'ancienne version reste disponible
-- ✅ **v2.0 nouvelle**: Nouvelle version avec Ollama
-- ✅ **latest pointe vers v2.0**: Par défaut, on utilise la dernière version
-- ✅ **Rollback facile**: Possibilité de revenir à v1.0 si besoin
+- [x] **v1.0 préservée**: L'ancienne version reste disponible
+- [x] **v2.0 nouvelle**: Nouvelle version avec Ollama
+- [x] **latest pointe vers v2.0**: Par défaut, on utilise la dernière version
+- [x] **Rollback facile**: Possibilité de revenir à v1.0 si besoin
 
 ---
 
-## 🚀 Push sur Docker Hub
+## Push sur Docker Hub
 
 ### Méthode 1: Script Automatique (Recommandé)
 
@@ -75,7 +75,7 @@ docker compose push
 
 ---
 
-## 📦 Utilisation des Images
+## Utilisation des Images
 
 ### Déployer v2.0 (avec Ollama)
 
@@ -141,7 +141,7 @@ services:
 
 ---
 
-## 🔍 Vérifier les Images sur Docker Hub
+## Vérifier les Images sur Docker Hub
 
 ### Via Web
 1. Aller sur https://hub.docker.com
@@ -161,26 +161,26 @@ curl -s https://hub.docker.com/v2/repositories/serini/safran-frontend-ui/tags | 
 
 ---
 
-## 📋 Changelog
+## Changelog
 
 ### v2.0 (Nouvelle Version)
-- ✅ Intégration Ollama LLM (llama3.2:3b)
-- ✅ RAG hybride intelligent
-- ✅ Réponses naturelles aux salutations
-- ✅ 6 profils distincts (CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE)
-- ✅ 15 entrées Q&A dans la base de connaissances
-- ✅ Affichage du domaine dans le frontend
+- [x] Intégration Ollama LLM (llama3.2:3b)
+- [x] RAG hybride intelligent
+- [x] Réponses naturelles aux salutations
+- [x] 6 profils distincts (CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE)
+- [x] 15 entrées Q&A dans la base de connaissances
+- [x] Affichage du domaine dans le frontend
 
 ### v1.0 (Version Initiale)
-- ✅ RAG simple avec sentence-transformers
-- ✅ Authentification LDAP
-- ✅ 4 profils (CDI, CDD, Intérim, Stagiaire)
-- ✅ 10 entrées Q&A
-- ✅ Theme toggle (dark/light)
+- [x] RAG simple avec sentence-transformers
+- [x] Authentification LDAP
+- [x] 4 profils (CDI, CDD, Intérim, Stagiaire)
+- [x] 10 entrées Q&A
+- [x] Theme toggle (dark/light)
 
 ---
 
-## 🎯 Recommandations
+## Recommandations
 
 ### Pour Production
 ```bash
@@ -207,7 +207,7 @@ docker compose up -d
 
 ---
 
-## 🔐 Sécurité
+## Sécurité
 
 ### Secrets Docker Hub
 Ne jamais commiter les credentials Docker Hub dans Git!
@@ -233,7 +233,7 @@ docker compose push
 
 ---
 
-## ✨ Résumé
+## Résumé
 
 **Commande Rapide**:
 ```bash
@@ -241,7 +241,7 @@ docker compose push
 ```
 
 **Résultat**:
-- ✅ v1.0 préservée (sans Ollama)
-- ✅ v2.0 créée (avec Ollama)
-- ✅ latest → v2.0
-- ✅ Rollback possible vers v1.0
+- [x] v1.0 préservée (sans Ollama)
+- [x] v2.0 créée (avec Ollama)
+- [x] latest → v2.0
+- [x] Rollback possible vers v1.0

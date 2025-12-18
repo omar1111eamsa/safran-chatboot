@@ -1,11 +1,11 @@
-# 🎉 HR Chatbot Application - READY TO USE!
+# HR Chatbot Application - READY TO USE
 
-## 📍 Project Location
+## Project Location
 ```
 /home/omar/myWork/safran
 ```
 
-## 🚀 Quick Start (3 Steps)
+## Quick Start (3 Steps)
 
 ### 1. Start the Application
 ```bash
@@ -21,7 +21,7 @@ docker compose up -d
 ### 3. Access the Application
 Open your browser: **http://localhost:5173**
 
-## 👥 Test Users
+## Test Users
 
 | Username | Password | Profile | Use Case |
 |----------|----------|---------|----------|
@@ -30,7 +30,7 @@ Open your browser: **http://localhost:5173**
 | `charlie` | `password` | Intérim | Temporary worker |
 | `david` | `password` | Stagiaire | Intern |
 
-## ✨ Features to Try
+## Features to Try
 
 1. **Login** with any test user
 2. **Theme Toggle** - Click the sun/moon icon
@@ -41,14 +41,14 @@ Open your browser: **http://localhost:5173**
 4. **Profile Display** - See your user info in the header
 5. **Auto Token Refresh** - Tokens refresh automatically
 
-## 📊 Services Running
+## Services Running
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 - **LDAP**: localhost:389
 
-## 🛠️ Useful Commands
+## Useful Commands
 
 ```bash
 # View logs
@@ -69,13 +69,13 @@ docker compose down
 docker compose down -v
 ```
 
-## 📚 Documentation
+## Documentation
 
 - **README**: [`README.md`](file:///home/omar/myWork/safran/README.md) - Complete documentation
 - **Walkthrough**: See artifacts for implementation details
 - **API Docs**: http://localhost:8000/docs (Swagger UI)
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
@@ -85,7 +85,7 @@ docker compose down -v
 └─────────────────┘      └─────────────────┘      └─────────────────┘
 ```
 
-## 🔐 Security Notes
+## Security Notes
 
 **For Development**:
 - JWT secrets are set in `.env`
@@ -99,23 +99,23 @@ docker compose down -v
 4. Update CORS origins
 5. Use strong user passwords
 
-## 🎨 UI Features
+## UI Features
 
-- ✅ Dark/Light theme (persists in localStorage)
-- ✅ Responsive design (mobile, tablet, desktop)
-- ✅ Real-time chat interface
-- ✅ User profile display
-- ✅ Loading states and animations
-- ✅ Error handling with user-friendly messages
+- [x] Dark/Light theme (persists in localStorage)
+- [x] Responsive design (mobile, tablet, desktop)
+- [x] Real-time chat interface
+- [x] User profile display
+- [x] Loading states and animations
+- [x] Error handling with user-friendly messages
 
-## 🧠 RAG Engine
+## RAG Engine
 
 - **Model**: all-MiniLM-L6-v2 (sentence-transformers)
 - **Knowledge Base**: 10 Q&A entries
 - **Filtering**: Answers filtered by user profile (CDI, CDD, Intérim, Stagiaire, Cadre, Non-Cadre)
 - **Search**: Semantic search with cosine similarity
 
-## 📝 Files Created
+## Files Created
 
 **Total**: 35+ files including:
 - Docker configuration
@@ -124,7 +124,7 @@ docker compose down -v
 - LDAP setup
 - Documentation
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Services won't start?
 ```bash
@@ -150,14 +150,14 @@ Check logs:
 docker compose logs backend-api
 ```
 
-## 🎯 Next Steps
+## Next Steps
 
 1. **Try the Application**: Login and chat with different users
 2. **Explore the Code**: Check the implementation files
 3. **Customize**: Add more Q&A entries to `backend/data/knowledge_base.csv`
 4. **Deploy**: Follow production deployment guide in README
 
-## 📞 Support
+## Support
 
 - Check [`README.md`](file:///home/omar/myWork/safran/README.md) for detailed documentation
 - View API documentation at http://localhost:8000/docs
@@ -165,4 +165,4 @@ docker compose logs backend-api
 
 ---
 
-**Enjoy your HR Chatbot! 🤖💼**
+**Enjoy your HR Chatbot!**

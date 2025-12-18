@@ -1,6 +1,6 @@
-# ✅ Intégration Ollama - TERMINÉE ET TESTÉE
+# Intégration Ollama - TERMINÉE ET TESTÉE
 
-## 🎉 Résultat Final
+## Résultat Final
 
 L'intégration d'Ollama est **complète et fonctionnelle** !
 
@@ -8,7 +8,7 @@ L'intégration d'Ollama est **complète et fonctionnelle** !
 
 #### Test 1: Salutation
 **Question**: "bonjour"
-**Résultat**: ✅ **SUCCÈS**
+**Résultat**: SUCCESS
 ```json
 {
   "question": "bonjour",
@@ -23,7 +23,7 @@ L'intégration d'Ollama est **complète et fonctionnelle** !
 
 #### Test 2: Question RH
 **Question**: "Comment poser un congé ?"
-**Résultat**: ✅ **SUCCÈS**
+**Résultat**: SUCCESS
 ```json
 {
   "question": "Comment poser un congé ?",
@@ -36,7 +36,7 @@ L'intégration d'Ollama est **complète et fonctionnelle** !
 
 ---
 
-## 🔧 Problèmes Résolus
+## Problèmes Résolus
 
 ### 1. Backend ne Rebuild Pas
 **Problème**: Les modifications de code n'étaient pas prises en compte
@@ -52,7 +52,7 @@ L'intégration d'Ollama est **complète et fonctionnelle** !
 
 ---
 
-## 📊 Architecture Finale
+## Architecture Finale
 
 ```
 Question Utilisateur
@@ -76,7 +76,7 @@ Question Utilisateur
 
 ---
 
-## 🚀 Services Actifs
+## Services Actifs
 
 ```bash
 $ docker compose ps
@@ -89,19 +89,19 @@ hr-ollama     Up (healthy)
 
 ---
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### ✅ Conversations Naturelles
+### Conversations Naturelles
 - Salutations: "Bonjour", "Salut", "Merci"
 - Questions générales
 - Refus poli des questions hors-sujet
 
-### ✅ Questions RH avec Contexte
+### Questions RH avec Contexte
 - Utilise la base de connaissances
 - Affiche le domaine (congés, paie, etc.)
 - Filtre par profil utilisateur
 
-### ✅ Profils Uniques
+### Profils Uniques
 - CDI
 - CDD
 - CADRE
@@ -111,7 +111,7 @@ hr-ollama     Up (healthy)
 
 ---
 
-## 📝 Commandes Utiles
+## Commandes Utiles
 
 ### Tester le Chatbot
 ```bash
@@ -156,7 +156,7 @@ docker compose restart backend-api
 
 ---
 
-## 🎯 Prochaines Étapes (Optionnel)
+## Prochaines Étapes (Optionnel)
 
 ### 1. Améliorer le Prompt
 Modifier `backend/app/llm_service.py` pour personnaliser les prompts
@@ -184,14 +184,14 @@ threshold=0.6  # Modifier ici (0.4-0.9)
 
 ---
 
-## 🎊 Conclusion
+## Conclusion
 
 **Le chatbot RH est maintenant intelligent !**
 
-- ✅ Comprend les salutations
-- ✅ Répond aux questions RH avec précision
-- ✅ Refuse poliment les questions hors-sujet
-- ✅ Utilise la base de connaissances quand pertinent
-- ✅ Génère des réponses naturelles et détaillées
+- [x] Comprend les salutations
+- [x] Répond aux questions RH avec précision
+- [x] Refuse poliment les questions hors-sujet
+- [x] Utilise la base de connaissances quand pertinent
+- [x] Génère des réponses naturelles et détaillées
 
-**Fini les réponses aléatoires pour "bonjour" !** 🚀
+**Fini les réponses aléatoires pour "bonjour" !**

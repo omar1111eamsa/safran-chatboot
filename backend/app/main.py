@@ -234,11 +234,11 @@ async def chat(
             domain=None  # No domain for greetings
         )
     
-    # Step 2: Search RAG knowledge base with higher threshold
+    # Step 2: Search RAG knowledge base with adjusted threshold for better variation detection
     rag_answer, domain, similarity, profile_allowed = rag_engine.search_knowledge(
         question=request.message,
         employee_type=current_user.employee_type,
-        threshold=0.75
+        threshold=0.65  # Adjusted from 0.75 to better detect question variations
     )
     
     # Check for profile mismatch
@@ -246,32 +246,35 @@ async def chat(
         logger.warning(f"Access denied for user {current_user.username} (profile: {current_user.employee_type})")
         return ChatResponse(
             question=request.message,
-            answer=f"Votre profil {current_user.employee_type} ne me permet pas de répondre à cette question.",
+            answer="Désolé, cette information n'est pas disponible pour votre profil. Pour plus d'informations, veuillez contacter le service RH.",
             profile=current_user.employee_type,
             domain=None
         )
     
-    # Step 3: Generate response with Ollama
-    if rag_answer and similarity >= 0.75:
-        # RAG found relevant answer - use it as context for Ollama
-        context = f"Domaine: {domain}\nRéponse de la base de connaissances: {rag_answer}"
-        logger.info(f"Using RAG context (similarity: {similarity:.3f})")
+    # Step 3: Generate response
+    if rag_answer and similarity >= 0.65:
+        # RAG found relevant answer - return it directly with minimal formatting
+        # This preserves the exact facts from the knowledge base
+        logger.info(f"Using RAG answer directly (similarity: {similarity:.3f})")
         
-        response = ollama.generate_response(
+        # Add minimal polite formatting without changing facts
+        formatted_answer = f"Pour répondre à votre question : {rag_answer}"
+        
+        return ChatResponse(
             question=request.message,
-            context=context,
-            profile=current_user.employee_type
+            answer=formatted_answer,
+            profile=current_user.employee_type,
+            domain=domain
         )
     else:
-        # No relevant RAG answer - Ollama generates response alone
-        logger.info(f"No relevant RAG answer (similarity: {similarity:.3f}), using Ollama alone")
-        domain = None
-        
+        # No RAG answer or low similarity - use Ollama for general response
+        logger.info("No RAG match - using Ollama for general response")
         response = ollama.generate_response(
             question=request.message,
             context=None,
             profile=current_user.employee_type
         )
+        domain = None
     
     return ChatResponse(
         question=request.message,

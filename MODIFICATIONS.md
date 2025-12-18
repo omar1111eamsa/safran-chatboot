@@ -1,10 +1,10 @@
-# 🔄 Modifications Apportées au Chatbot RH
+# Modifications Apportées au Chatbot RH
 
 ## Résumé des Changements
 
 Toutes les modifications demandées ont été implémentées avec succès.
 
-## 1. ✅ Système de 6 Profils Distincts
+## 1. Système de 6 Profils Distincts
 
 ### Anciens Profils (4)
 - CDI / Cadre
@@ -21,8 +21,8 @@ Toutes les modifications demandées ont été implémentées avec succès.
 - **STAGIAIRE**
 
 ### Fichiers Modifiés
-- ✅ `backend/data/knowledge_base.csv` - 15 entrées avec les 6 profils
-- ✅ `infra/ldap/bootstrap.ldif` - Utilisateurs LDAP mis à jour
+- [x] `backend/data/knowledge_base.csv` - 15 entrées avec les 6 profils
+- [x] `infra/ldap/bootstrap.ldif` - Utilisateurs LDAP mis à jour
 
 ### Exemples d'Utilisateurs
 | Utilisateur | employeeType | title |
@@ -34,7 +34,7 @@ Toutes les modifications demandées ont été implémentées avec succès.
 
 ---
 
-## 2. ✅ Affichage du Domaine dans le Frontend
+## 2. Affichage du Domaine dans le Frontend
 
 ### Modification
 Le domaine s'affiche maintenant sous forme de **badge coloré** à côté de chaque réponse du chatbot.
@@ -50,15 +50,15 @@ Le domaine s'affiche maintenant sous forme de **badge coloré** à côté de cha
 ```
 Réponse du chatbot...
 
-📁 congés
+[Folder] congés
 ```
 
 ### Fichier Modifié
-- ✅ `frontend/src/components/Chat.jsx` - Badge avec icône et couleur
+- [x] `frontend/src/components/Chat.jsx` - Badge avec icône et couleur
 
 ---
 
-## 3. ✅ Message d'Erreur Personnalisé
+## 3. Message d'Erreur Personnalisé
 
 ### Ancien Message
 > "Désolé, je n'ai pas d'information spécifique pour votre profil (CDI/Cadre). Veuillez contacter le service RH."
@@ -67,11 +67,11 @@ Réponse du chatbot...
 > **"Ton profil ne te permet pas d'avoir une réponse à ta question."**
 
 ### Fichier Modifié
-- ✅ `backend/app/rag.py` - Message d'erreur mis à jour
+- [x] `backend/app/rag.py` - Message d'erreur mis à jour
 
 ---
 
-## 4. ✅ RAG Plus Performant
+## 4. RAG Plus Performant
 
 ### Ancien Modèle
 - **all-MiniLM-L6-v2**
@@ -84,17 +84,17 @@ Réponse du chatbot...
 - Performance: **Excellente** (meilleure précision)
 
 ### Améliorations
-- ✅ Meilleure compréhension sémantique
-- ✅ Recherche plus précise
-- ✅ Meilleurs résultats pour les questions complexes
+- [x] Meilleure compréhension sémantique
+- [x] Recherche plus précise
+- [x] Meilleurs résultats pour les questions complexes
 
 ### Fichiers Modifiés
-- ✅ `backend/app/rag.py` - Modèle changé
-- ✅ `backend/Dockerfile` - Téléchargement du nouveau modèle
+- [x] `backend/app/rag.py` - Modèle changé
+- [x] `backend/Dockerfile` - Téléchargement du nouveau modèle
 
 ---
 
-## 📊 Base de Connaissances Étendue
+## Base de Connaissances Étendue
 
 Ajout de 5 nouvelles entrées pour couvrir tous les profils:
 
@@ -110,7 +110,7 @@ Ajout de 5 nouvelles entrées pour couvrir tous les profils:
 
 ---
 
-## 🚀 Pour Appliquer les Modifications
+## Pour Appliquer les Modifications
 
 ### 1. Reconstruire les Services
 ```bash
@@ -135,7 +135,7 @@ sleep 10
 **Test 1 - Nouveau Profil**:
 - Login: `charlie` / `password` (INTÉRIMAIRE)
 - Question: "Quand suis-je payé ?"
-- Attendu: Réponse spécifique INTÉRIMAIRE + badge "📁 paie"
+- Attendu: Réponse spécifique INTÉRIMAIRE + badge "[Folder] paie"
 
 **Test 2 - Message d'Erreur**:
 - Login: `david` (STAGIAIRE)
@@ -145,13 +145,13 @@ sleep 10
 **Test 3 - Affichage Domaine**:
 - Login: `alice` (CDI/CADRE)
 - Question: "Comment poser un congé annuel ?"
-- Attendu: Réponse + badge "📁 congés"
+- Attendu: Réponse + badge "[Folder] congés"
 
 ---
 
-## 📝 Temps de Build
+## Temps de Build
 
-⚠️ **Important**: Le nouveau modèle RAG est plus gros (420 MB vs 80 MB).
+**Important**: Le nouveau modèle RAG est plus gros (420 MB vs 80 MB).
 
 **Temps de build estimé**:
 - Backend: ~20-25 minutes (téléchargement du modèle)
@@ -160,14 +160,14 @@ sleep 10
 
 ---
 
-## ✨ Résultat Final
+## Résultat Final
 
 Votre chatbot RH dispose maintenant de:
-- ✅ 6 profils distincts et indépendants
-- ✅ Affichage visuel du domaine (badge coloré)
-- ✅ Message d'erreur personnalisé et clair
-- ✅ Meilleure précision RAG (modèle performant)
-- ✅ 15 entrées Q&A couvrant tous les profils
-- ✅ Interface utilisateur améliorée
+- [x] 6 profils distincts et indépendants
+- [x] Affichage visuel du domaine (badge coloré)
+- [x] Message d'erreur personnalisé et clair
+- [x] Meilleure précision RAG (modèle performant)
+- [x] 15 entrées Q&A couvrant tous les profils
+- [x] Interface utilisateur améliorée
 
-**Prêt pour la production!** 🎉
+**Prêt pour la production!**

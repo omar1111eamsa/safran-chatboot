@@ -1,5 +1,13 @@
 /**
- * Authentication context
+ * Authentication Context
+ * 
+ * Manages authentication state and provides auth-related functions throughout the application.
+ * Features:
+ * - JWT token management (access and refresh tokens)
+ * - User profile state management
+ * - Persistent authentication across page reloads
+ * - Login/logout functionality
+ * - Automatic token validation on app initialization
  */
 
 import { createContext, useContext, useState, useEffect } from 'react';

@@ -1,16 +1,11 @@
 question_id,profil,domaine,question,reponse
-1,CDI,congés,Comment poser un congé annuel ?,La demande se fait via le portail RH au moins 7 jours à l'avance
-2,CDD,congés,Ai-je droit aux congés payés ?,Oui proportionnellement à la durée du contrat
-3,INTÉRIMAIRE,avantages,Ai-je accès au transport ?,Selon les disponibilités définies par l'entreprise
-4,CADRE,temps de travail,Comment déclarer des heures supplémentaires ?,Via le manager et le portail RH
-5,NON-CADRE,temps de travail,Comment déclarer ses heures ?,Par badgeuse à l'entrée et à la sortie
-6,CDI,paie,Quand est versé le salaire ?,À la fin de chaque mois
-7,CDD,paie,Puis-je consulter mon bulletin de paie ?,Oui via le portail RH sécurisé
-8,STAGIAIRE,avantages,Ai-je accès à la cantine ?,Oui les stagiaires y ont accès
-9,CDI,transport,Comment s'inscrire au transport ?,Via le service RH
-10,CADRE,congés,Comment demander un congé exceptionnel ?,Validation manager puis RH
-11,STAGIAIRE,congés,Comment poser un congé en tant que stagiaire ?,Les stagiaires doivent demander l'autorisation à leur tuteur puis au service RH
-12,INTÉRIMAIRE,paie,Quand suis-je payé ?,Le paiement se fait selon les termes de votre contrat d'intérim
-13,NON-CADRE,avantages,Ai-je droit aux tickets restaurant ?,Oui tous les employés non-cadres ont droit aux tickets restaurant
-14,CADRE,transport,Ai-je droit au parking ?,Oui les cadres ont accès au parking réservé
-15,CDD,temps de travail,Quelles sont mes heures de travail ?,Selon votre contrat CDD généralement 35h par semaine
+1,CDI,Congés,Comment poser un congé annuel ?,La demande se fait via le portail RH au moins 7 jours à l'avance
+2,CDD,Congés,Ai-je droit aux congés payés ?,Oui proportionnellement à la durée du contrat
+3,INTÉRIMAIRE,Avantages,Ai-je accès au transport ?,Selon les disponibilités définies par l'entreprise
+4,CADRE,Temps de travail,Comment déclarer des heures supplémentaires ?,Via le manager et le portail RH
+5,NON-CADRE,Temps de travail,Comment fonctionne le pointage ?,Par badgeuse à l'entrée et à la sortie
+6,CDI,Paie,Quand est versé le salaire ?,À la fin de chaque mois
+7,CDD,Paie,Puis-je consulter mon bulletin de paie ?,Oui via le portail RH sécurisé
+8,STAGIAIRE,Avantages,Ai-je accès à la cantine ?,Oui les stagiaires y ont accès
+9,CDI,Transport,Comment s'inscrire au transport ?,Via le service RH
+10,CADRE,Congés,Comment demander un congé exceptionnel ?,Validation manager puis RH

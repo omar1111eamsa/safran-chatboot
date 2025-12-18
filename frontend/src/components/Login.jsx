@@ -1,5 +1,13 @@
 /**
- * Login component
+ * Login Component
+ * 
+ * Provides user authentication interface for the HR Chatbot application.
+ * Features:
+ * - LDAP-based authentication
+ * - Form validation and error handling
+ * - Theme toggle support
+ * - Test account information display
+ * - Responsive design with dark mode support
  */
 
 import { useState } from 'react';
