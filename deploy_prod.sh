@@ -17,7 +17,7 @@ echo -e "${BLUE}=== HR Chatbot PRODUCTION Deployment ===${NC}"
 # 1. Pull Latest Images
 echo -e "\n${YELLOW}[1/4] Pulling latest images from Docker Hub...${NC}"
 docker compose pull
-# Note: This will pull 'serini/safran-backend-api:v3.0' and frontend equivalent
+# Note: This will pull 'safran/safran-backend-api:v3.0' and frontend equivalent
 
 # 2. Start Services
 echo -e "\n${YELLOW}[2/4] Starting services...${NC}"

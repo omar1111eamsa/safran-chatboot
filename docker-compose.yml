@@ -7,10 +7,10 @@ services:
   ldap-service:
     image: osixia/openldap:1.5.0
     container_name: hr-ldap
-    hostname: ldap.serini.local
+    hostname: ldap.safran.local
     environment:
-      - LDAP_ORGANISATION=${LDAP_ORGANIZATION:-Serini Corporation}
-      - LDAP_DOMAIN=${LDAP_DOMAIN:-serini.local}
+      - LDAP_ORGANISATION=${LDAP_ORGANIZATION:-Safran Corporation}
+      - LDAP_DOMAIN=${LDAP_DOMAIN:-safran.local}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
       - LDAP_CONFIG_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
       - LDAP_RFC2307BIS_SCHEMA=true
@@ -26,7 +26,7 @@ services:
     networks:
       - hr-chatbot-network
     healthcheck:
-      test: [ "CMD-SHELL", "ldapsearch -x -H ldap://localhost -b dc=serini,dc=local -D 'cn=admin,dc=serini,dc=local' -w ${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!} || exit 1" ]
+      test: [ "CMD-SHELL", "ldapsearch -x -H ldap://localhost -b dc=safran,dc=local -D 'cn=admin,dc=safran,dc=local' -w ${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!} || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -61,8 +61,8 @@ services:
     container_name: hr-backend
     environment:
       - LDAP_SERVER=${LDAP_SERVER:-ldap://ldap-service:389}
-      - LDAP_BASE_DN=${LDAP_BASE_DN:-dc=serini,dc=local}
-      - LDAP_ADMIN_DN=${LDAP_ADMIN_DN:-cn=admin,dc=serini,dc=local}
+      - LDAP_BASE_DN=${LDAP_BASE_DN:-dc=safran,dc=local}
+      - LDAP_ADMIN_DN=${LDAP_ADMIN_DN:-cn=admin,dc=safran,dc=local}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD:-SecureAdminPass123!}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-change-in-production}
       - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY:-your-refresh-secret-key}

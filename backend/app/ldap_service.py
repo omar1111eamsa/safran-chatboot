@@ -94,7 +94,7 @@ class LDAPService:
             profile = {
                 'username': username,
                 'full_name': str(entry.cn.value) if entry.cn else username,
-                'email': str(entry.mail.value) if entry.mail else f"{username}@serini.local",
+                'email': str(entry.mail.value) if entry.mail else f"{username}@safran.local",
                 'employee_type': str(entry.employeeType.value) if entry.employeeType else 'Unknown',
                 'department': str(entry.departmentNumber.value) if entry.departmentNumber else 'General'
             }

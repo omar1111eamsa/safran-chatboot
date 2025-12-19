@@ -1,14 +1,14 @@
 #!/bin/bash
 # Script pour pousser les images Docker sur Docker Hub avec versioning
-# Username: serini
+# Username: safran
 
 set -e
 
-echo "🐳 Push des images Docker sur Docker Hub (username: serini)"
+echo "🐳 Push des images Docker sur Docker Hub (username: safran)"
 echo ""
 
 # Variables
-DOCKER_USERNAME="serini"
+DOCKER_USERNAME="safran"
 BACKEND_IMAGE="safran-backend-api"
 FRONTEND_IMAGE="safran-frontend-ui"
 

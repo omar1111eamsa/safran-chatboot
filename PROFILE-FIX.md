@@ -41,11 +41,11 @@ Le `docker-compose.yml` est maintenant configuré avec les noms d'images Docker 
 
 ```yaml
 backend-api:
-  image: serini/safran-backend-api:latest
+  image: safran/safran-backend-api:latest
   build: ...
 
 frontend-ui:
-  image: serini/safran-frontend-ui:latest
+  image: safran/safran-frontend-ui:latest
   build: ...
 ```
 
@@ -53,7 +53,7 @@ frontend-ui:
 
 ```bash
 # 1. Connexion à Docker Hub
-docker login -u serini
+docker login -u safran
 
 # 2. Build des images
 docker compose build
@@ -67,8 +67,8 @@ docker compose push
 ### Images Disponibles
 
 Après le push, les images seront disponibles sur:
-- `docker pull serini/safran-backend-api:latest`
-- `docker pull serini/safran-frontend-ui:latest`
+- `docker pull safran/safran-backend-api:latest`
+- `docker pull safran/safran-frontend-ui:latest`
 
 ---
 
@@ -90,7 +90,7 @@ docker compose up -d
 ./setup-ldap.sh
 
 # (Optionnel) Push sur Docker Hub
-docker login -u serini
+docker login -u safran
 docker compose push
 ```
 
@@ -113,7 +113,7 @@ Chaque profil voit **uniquement** ses questions:
 - etc.
 
 ### Docker Hub
-- [x] Images taguées avec `serini/`
+- [x] Images taguées avec `safran/`
 - [x] Push simple avec `docker compose push`
 - [x] Pull facile pour déploiement
 

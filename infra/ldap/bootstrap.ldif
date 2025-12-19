@@ -1,13 +1,13 @@
-# Bootstrap LDIF for HR Chatbot - Serini Corporation
+# Bootstrap LDIF for HR Chatbot - Safran Corporation
 # This file creates the organizational structure and test users
 # Each user has ONE profile in employeeType (CDI, CDD, CADRE, NON-CADRE, INTÉRIMAIRE, STAGIAIRE)
 
 # Create organizational units
-dn: ou=People,dc=serini,dc=local
+dn: ou=People,dc=safran,dc=local
 objectClass: organizationalUnit
 ou: People
 
-dn: ou=Groups,dc=serini,dc=local
+dn: ou=Groups,dc=safran,dc=local
 objectClass: organizationalUnit
 ou: Groups
 
@@ -16,7 +16,7 @@ ou: Groups
 # ================================
 
 # User 1: Alice - CADRE
-dn: uid=alice,ou=People,dc=serini,dc=local
+dn: uid=alice,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -25,13 +25,13 @@ cn: Alice Dupont
 sn: Dupont
 givenName: Alice
 uid: alice
-mail: alice.dupont@serini.local
+mail: alice.dupont@safran.local
 employeeType: CADRE
 departmentNumber: IT
 userPassword: password
 
 # User 2: Bob - CDI
-dn: uid=bob,ou=People,dc=serini,dc=local
+dn: uid=bob,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -40,13 +40,13 @@ cn: Bob Martin
 sn: Martin
 givenName: Bob
 uid: bob
-mail: bob.martin@serini.local
+mail: bob.martin@safran.local
 employeeType: CDI
 departmentNumber: Sales
 userPassword: password
 
 # User 3: Charlie - INTÉRIMAIRE
-dn: uid=charlie,ou=People,dc=serini,dc=local
+dn: uid=charlie,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -55,13 +55,13 @@ cn: Charlie Bernard
 sn: Bernard
 givenName: Charlie
 uid: charlie
-mail: charlie.bernard@serini.local
+mail: charlie.bernard@safran.local
 employeeType: INTÉRIMAIRE
 departmentNumber: Logistics
 userPassword: password
 
 # User 4: David - STAGIAIRE
-dn: uid=david,ou=People,dc=serini,dc=local
+dn: uid=david,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -70,13 +70,13 @@ cn: David Petit
 sn: Petit
 givenName: David
 uid: david
-mail: david.petit@serini.local
+mail: david.petit@safran.local
 employeeType: STAGIAIRE
 departmentNumber: Marketing
 userPassword: password
 
 # User 5: Emma - CDD
-dn: uid=emma,ou=People,dc=serini,dc=local
+dn: uid=emma,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -85,13 +85,13 @@ cn: Emma Rousseau
 sn: Rousseau
 givenName: Emma
 uid: emma
-mail: emma.rousseau@serini.local
+mail: emma.rousseau@safran.local
 employeeType: CDD
 departmentNumber: Finance
 userPassword: password
 
 # User 6: Frank - NON-CADRE
-dn: uid=frank,ou=People,dc=serini,dc=local
+dn: uid=frank,ou=People,dc=safran,dc=local
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -100,7 +100,7 @@ cn: Frank Moreau
 sn: Moreau
 givenName: Frank
 uid: frank
-mail: frank.moreau@serini.local
+mail: frank.moreau@safran.local
 employeeType: NON-CADRE
 departmentNumber: Production
 userPassword: password
@@ -109,12 +109,12 @@ userPassword: password
 # Groups
 # ================================
 
-dn: cn=employees,ou=Groups,dc=serini,dc=local
+dn: cn=employees,ou=Groups,dc=safran,dc=local
 objectClass: groupOfNames
 cn: employees
-member: uid=alice,ou=People,dc=serini,dc=local
-member: uid=bob,ou=People,dc=serini,dc=local
-member: uid=charlie,ou=People,dc=serini,dc=local
-member: uid=david,ou=People,dc=serini,dc=local
-member: uid=emma,ou=People,dc=serini,dc=local
-member: uid=frank,ou=People,dc=serini,dc=local
+member: uid=alice,ou=People,dc=safran,dc=local
+member: uid=bob,ou=People,dc=safran,dc=local
+member: uid=charlie,ou=People,dc=safran,dc=local
+member: uid=david,ou=People,dc=safran,dc=local
+member: uid=emma,ou=People,dc=safran,dc=local
+member: uid=frank,ou=People,dc=safran,dc=local

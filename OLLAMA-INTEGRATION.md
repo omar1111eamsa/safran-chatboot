@@ -85,7 +85,7 @@ docker exec -it hr-ollama ollama run llama3.2:3b "Bonjour"
 2. Ollama génère réponse seul
 
 **Réponse**: 
-> "Bonjour ! Je suis l'assistant RH de Serini. Comment puis-je vous aider aujourd'hui ? Je peux répondre à vos questions sur les congés, la paie, les avantages sociaux et bien plus encore."
+> "Bonjour ! Je suis l'assistant RH de Safran. Comment puis-je vous aider aujourd'hui ? Je peux répondre à vos questions sur les congés, la paie, les avantages sociaux et bien plus encore."
 
 **Domaine**: None
 
@@ -127,7 +127,7 @@ docker exec -it hr-ollama ollama run llama3.2:3b "Bonjour"
 2. Ollama génère réponse seul
 
 **Réponse**:
-> "Je suis désolé, mais je suis un assistant RH et je ne peux répondre qu'aux questions liées aux ressources humaines de l'entreprise Serini. Puis-je vous aider avec une question concernant les congés, la paie, les avantages sociaux ou tout autre sujet RH ?"
+> "Je suis désolé, mais je suis un assistant RH et je ne peux répondre qu'aux questions liées aux ressources humaines de l'entreprise Safran. Puis-je vous aider avec une question concernant les congés, la paie, les avantages sociaux ou tout autre sujet RH ?"
 
 **Domaine**: None
 

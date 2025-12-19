@@ -166,4 +166,4 @@ Utilisez ces comptes pour vous connecter à l'application :
 
 ---
 
-**Développé par l'équipe d'ingénierie Serini**
+**Développé par l'équipe d'ingénierie Safran**

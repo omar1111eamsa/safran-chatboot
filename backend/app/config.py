@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     # LDAP server hostname (use service name in Docker Compose, or IP/hostname in production)
     ldap_host: str = "ldap-service"
     ldap_port: int = 389
-    ldap_base_dn: str = "dc=serini,dc=local"
-    ldap_admin_dn: str = "cn=admin,dc=serini,dc=local"
+    ldap_base_dn: str = "dc=safran,dc=local"
+    ldap_admin_dn: str = "cn=admin,dc=safran,dc=local"
     # WARNING: Change this password in production environments
     ldap_admin_password: str = "SecureAdminPass123!"
     

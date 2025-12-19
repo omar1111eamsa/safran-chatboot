@@ -39,23 +39,23 @@ Le script va:
 
 ```bash
 # 1. Login Docker Hub
-docker login -u serini
+docker login -u safran
 
 # 2. Tag backend
-docker tag safran-backend-api:latest serini/safran-backend-api:v2.0
-docker tag safran-backend-api:latest serini/safran-backend-api:latest
+docker tag safran-backend-api:latest safran/safran-backend-api:v2.0
+docker tag safran-backend-api:latest safran/safran-backend-api:latest
 
 # 3. Tag frontend
-docker tag safran-frontend-ui:latest serini/safran-frontend-ui:v2.0
-docker tag safran-frontend-ui:latest serini/safran-frontend-ui:latest
+docker tag safran-frontend-ui:latest safran/safran-frontend-ui:v2.0
+docker tag safran-frontend-ui:latest safran/safran-frontend-ui:latest
 
 # 4. Push backend
-docker push serini/safran-backend-api:v2.0
-docker push serini/safran-backend-api:latest
+docker push safran/safran-backend-api:v2.0
+docker push safran/safran-backend-api:latest
 
 # 5. Push frontend
-docker push serini/safran-frontend-ui:v2.0
-docker push serini/safran-frontend-ui:latest
+docker push safran/safran-frontend-ui:v2.0
+docker push safran/safran-frontend-ui:latest
 ```
 
 ---
@@ -64,7 +64,7 @@ docker push serini/safran-frontend-ui:latest
 
 ```bash
 # Login
-docker login -u serini
+docker login -u safran
 
 # Build et push automatiquement
 docker compose build
@@ -83,11 +83,11 @@ docker compose push
 # docker-compose.yml
 services:
   backend-api:
-    image: serini/safran-backend-api:v2.0
+    image: safran/safran-backend-api:v2.0
     # ...
   
   frontend-ui:
-    image: serini/safran-frontend-ui:v2.0
+    image: safran/safran-frontend-ui:v2.0
     # ...
   
   ollama:
@@ -108,11 +108,11 @@ docker compose up -d
 # docker-compose.yml
 services:
   backend-api:
-    image: serini/safran-backend-api:v1.0
+    image: safran/safran-backend-api:v1.0
     # ...
   
   frontend-ui:
-    image: serini/safran-frontend-ui:v1.0
+    image: safran/safran-frontend-ui:v1.0
     # ...
   
   # Pas de service ollama
@@ -131,11 +131,11 @@ docker compose up -d
 # docker-compose.yml
 services:
   backend-api:
-    image: serini/safran-backend-api:latest
+    image: safran/safran-backend-api:latest
     # ...
   
   frontend-ui:
-    image: serini/safran-frontend-ui:latest
+    image: safran/safran-frontend-ui:latest
     # ...
 ```
 
@@ -145,18 +145,18 @@ services:
 
 ### Via Web
 1. Aller sur https://hub.docker.com
-2. Login avec `serini`
+2. Login avec `safran`
 3. Voir les repositories:
-   - `serini/safran-backend-api`
-   - `serini/safran-frontend-ui`
+   - `safran/safran-backend-api`
+   - `safran/safran-frontend-ui`
 
 ### Via CLI
 ```bash
 # Lister les tags backend
-curl -s https://hub.docker.com/v2/repositories/serini/safran-backend-api/tags | jq '.results[].name'
+curl -s https://hub.docker.com/v2/repositories/safran/safran-backend-api/tags | jq '.results[].name'
 
 # Lister les tags frontend
-curl -s https://hub.docker.com/v2/repositories/serini/safran-frontend-ui/tags | jq '.results[].name'
+curl -s https://hub.docker.com/v2/repositories/safran/safran-frontend-ui/tags | jq '.results[].name'
 ```
 
 ---
@@ -185,14 +185,14 @@ curl -s https://hub.docker.com/v2/repositories/serini/safran-frontend-ui/tags | 
 ### Pour Production
 ```bash
 # Utiliser des tags versionnés
-image: serini/safran-backend-api:v2.0
+image: safran/safran-backend-api:v2.0
 ```
 **Avantage**: Contrôle total, pas de surprises
 
 ### Pour Développement
 ```bash
 # Utiliser latest
-image: serini/safran-backend-api:latest
+image: safran/safran-backend-api:latest
 ```
 **Avantage**: Toujours la dernière version
 
@@ -214,7 +214,7 @@ Ne jamais commiter les credentials Docker Hub dans Git!
 
 ```bash
 # Login une seule fois
-docker login -u serini
+docker login -u safran
 
 # Les credentials sont sauvegardés dans ~/.docker/config.json
 ```

@@ -13,7 +13,7 @@ docker cp infra/ldap/bootstrap.ldif hr-ldap:/tmp/bootstrap.ldif
 
 # Add users to LDAP
 echo "Adding users to LDAP..."
-docker exec hr-ldap ldapadd -x -H ldap://localhost -D "cn=admin,dc=serini,dc=local" -w "SecureAdminPass123!" -f /tmp/bootstrap.ldif 2>&1 | grep -v "Already exists" || true
+docker exec hr-ldap ldapadd -x -H ldap://localhost -D "cn=admin,dc=safran,dc=local" -w "SecureAdminPass123!" -f /tmp/bootstrap.ldif 2>&1 | grep -v "Already exists" || true
 
 echo "LDAP setup complete!"
 echo ""

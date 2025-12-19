@@ -49,7 +49,7 @@ check_answer() {
 
 echo "=== Testing Greetings (All Users) ==="
 USERS=("alice" "bob" "charlie" "david" "emma" "frank")
-STRICT_GREETING="Bonjour ! Je suis l'assistant RH virtuel de Serini. Comment puis-je vous aider ?"
+STRICT_GREETING="Bonjour ! Je suis l'assistant RH virtuel de Safran. Comment puis-je vous aider ?"
 
 for u in "${USERS[@]}"; do
     check_answer "$u" "password" "Bonjour" "$STRICT_GREETING"

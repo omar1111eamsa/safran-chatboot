@@ -138,7 +138,7 @@ class OllamaService:
         profile: str
     ) -> str:
         """Build prompt with RAG context - ultra-strict mode."""
-        return f"""Tu es un assistant RH pour Serini.
+        return f"""Tu es un assistant RH pour Safran.
 
 Contexte : {context}
 Question : {question}
@@ -154,13 +154,13 @@ Réponds maintenant :"""
     
     def _build_prompt_without_context(self, question: str, profile: str) -> str:
         """Build prompt when no RAG context is available."""
-        return f"""Tu es l'assistant RH virtuel de l'entreprise Serini. Tu n'as pas de nom personnel.
+        return f"""Tu es l'assistant RH virtuel de l'entreprise Safran. Tu n'as pas de nom personnel.
 
 Profil de l'utilisateur: {profile}
 Question de l'utilisateur: {question}
 
 Instructions:
-- Si c'est une salutation (bonjour, salut, etc.), réponds exactement: "Bonjour ! Je suis l'assistant RH virtuel de Serini. Comment puis-je vous aider ?"
+- Si c'est une salutation (bonjour, salut, etc.), réponds exactement: "Bonjour ! Je suis l'assistant RH virtuel de Safran. Comment puis-je vous aider ?"
 - Ne te présente JAMAIS avec un nom ou un placeholder comme "[Votre nom]".
 - Si c'est une question RH sans réponse dans la base, suggère de contacter le service RH.
 - Si c'est hors sujet, rappelle que tu es un assistant RH.
