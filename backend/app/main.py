@@ -257,8 +257,8 @@ async def chat(
         # This preserves the exact facts from the knowledge base
         logger.info(f"Using RAG answer directly (similarity: {similarity:.3f})")
         
-        # Add minimal polite formatting without changing facts
-        formatted_answer = f"Pour répondre à votre question : {rag_answer}"
+        # Return strict answer without prefix as requested
+        formatted_answer = rag_answer
         
         return ChatResponse(
             question=request.message,

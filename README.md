@@ -81,185 +81,88 @@ L'architecture repose sur :
 
 ---
 
-## Installation via Docker Hub (Production/Test)
+## Installation
 
-Cette méthode est recommandée pour un déploiement rapide sans compilation locale.
+Nous proposons deux méthodes d'installation : **Automatique** (recommandée) et **Manuelle**.
 
-### Prérequis
-- Docker Engine et Docker Compose installés.
+### Méthode 1 : Installation Automatique (Recommandée)
 
-### Procédure
+Le script `install.sh` automatise tout le processus : construction des images, démarrage des conteneurs, initialisation LDAP et téléchargement du modèle IA.
 
-1.  Créer un fichier `docker-compose.yml` avec le contenu suivant :
-
-    ```yaml
-    services:
-      backend-api:
-        image: serini/safran-backend-api:v2.0
-        ports:
-          - "8000:8000"
-        depends_on:
-          ldap-service:
-            condition: service_healthy
-          ollama:
-            condition: service_healthy
-        environment:
-          - LDAP_HOST=ldap-service
-          - OLLAMA_BASE_URL=http://ollama:11434
-          - OLLAMA_MODEL=llama3.2:3b
-
-      frontend-ui:
-        image: serini/safran-frontend-ui:v2.0
-        ports:
-          - "5173:80"
-        depends_on:
-          - backend-api
-
-      ldap-service:
-        image: osixia/openldap:1.5.0
-        ports:
-          - "389:389"
-          - "636:636"
-        environment:
-          - LDAP_ORGANISATION=Serini
-          - LDAP_DOMAIN=serini.local
-          - LDAP_ADMIN_PASSWORD=SecureAdminPass123!
-          - LDAP_TLS=false
-        healthcheck:
-          test: ["CMD", "ldapsearch", "-x", "-H", "ldap://localhost", "-b", "", "-s", "base"]
-          interval: 30s
-          retries: 5
-
-      ollama:
-        image: ollama/ollama:latest
-        ports:
-          - "11434:11434"
-        volumes:
-          - ollama-data:/root/.ollama
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-          interval: 30s
-          retries: 3
-
-    volumes:
-      ollama-data:
-    ```
-
-2.  Démarrer l'environnement :
+1.  **Lancer l'installation** :
     ```bash
-    docker compose up -d
+    ./install.sh
     ```
+    *Note : Soyez patient, le téléchargement du modèle IA (2 Go) peut prendre quelques minutes.*
 
-3.  Procéder à la [Configuration et Initialisation](#configuration-et-initialisation).
+2.  **Accéder à l'application** :
+    - URL : [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## Installation via GitHub (Développement)
+### Méthode 2 : Installation Manuelle (Docker Compose)
 
-Pour contribuer au projet ou modifier la configuration.
+Si vous préférez contrôler chaque étape.
 
-1.  Cloner le dépôt :
-    ```bash
-    git clone https://github.com/votre-user/safran-chatbot.git
-    cd safran-chatbot
-    ```
-
-2.  Construire et démarrer les services :
+1.  **Démarrer les services** :
     ```bash
     docker compose up -d --build
     ```
 
-3.  Procéder à la [Configuration et Initialisation](#configuration-et-initialisation).
+2.  **Initialiser l'Annuaire LDAP** (Requis pour la connexion) :
+    ```bash
+    ./setup-ldap.sh
+    ```
+
+3.  **Installer le Modèle IA** (Requis pour le chat) :
+    ```bash
+    ./setup-ollama.sh
+    # Ou manuellement : docker exec hr-ollama ollama pull llama3.2:3b
+    ```
 
 ---
 
-## Installation Manuelle (Code Source)
+## Vérification et Tests
 
-Exécution locale des applications (Backend et Frontend) hors conteneurs.
-*Note : Il est fortement recommandé d'utiliser Docker pour les services LDAP et Ollama.*
+Nous fournissons un script de vérification automatisé pour s'assurer que le système répond correctement.
 
-### 1. Démarrage des Services Dépendants (Docker)
-
+### 1. Lancer les tests de vérification
 ```bash
-docker compose up -d ldap-service ollama
+./verify_bot.sh
 ```
+Ce script va :
+- Vérifier la connexion de tous les utilisateurs types.
+- Tester la réponse "Bonjour" (Salutation standardisée).
+- Tester des questions RH spécifiques (RAG) pour chaque profil.
 
-### 2. Backend (Python)
+### 2. Comptes de Test Disponibles
 
-```bash
-cd backend
-python -m venv venv
-# Activation: source venv/bin/activate (Linux/Mac) ou venv\Scripts\activate (Windows)
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
-*Assurez-vous que les variables d'environnement pointent vers localhost pour LDAP et Ollama.*
+Utilisez ces comptes pour vous connecter à l'application :
 
-### 3. Frontend (Node.js)
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
+| Utilisateur | Mot de passe | Profil      | Accès                                      |
+|-------------|--------------|-------------|--------------------------------------------|
+| **alice**   | password     | Cadre       | Tout accès + Gestion Manager               |
+| **bob**     | password     | CDI         | Accès standard (Congés, Avantages)        |
+| **charlie** | password     | Intérimaire | Accès limité (Missions, Sécurité)         |
+| **david**   | password     | Stagiaire   | Accès limité (Stage, Cantine)             |
+| **emma**    | password     | CDD         | Accès standard (Contrat durée déterminée) |
+| **frank**   | password     | Non-Cadre   | Accès standard                             |
 
 ---
 
-## Configuration et Initialisation
+## Utilisation
 
-Une fois les conteneurs ou services démarrés, il est impératif d'initialiser le modèle d'IA et les données de test.
+1.  Connectez-vous avec un des comptes ci-dessus.
+2.  Posez une question (ex: "Comment poser des congés ?").
+3.  Le chatbot vous répondra en utilisant la base de connaissance interne.
+    - **Questions RH** : Réponse factuelle issue de la base.
+    - **Salutations/Hors-sujet** : Réponse conversationnelle courte ("Bonjour !...").
 
-### 1. Téléchargement du Modèle LLM
+## Dépannage
 
-Le modèle `llama3.2:3b` (environ 2 Go) doit être téléchargé dans le conteneur Ollama.
-
-**Via script (si disponible localement) :**
-```bash
-./setup-ollama.sh
-```
-
-**Via commande Docker manuelle :**
-```bash
-docker exec -it <nom_conteneur_ollama> ollama pull llama3.2:3b
-```
-
-### 2. Population de l'Annuaire LDAP
-
-Création de la structure organisationnelle et des utilisateurs de test.
-
-**Via script :**
-```bash
-./setup-ldap.sh
-```
-
-### Comptes de Test Disponibles
-
-| Identifiant | Mot de passe | Profil |
-|-------------|--------------|--------|
-| **alice**   | password     | CDI / Cadre |
-| **bob**     | password     | CDD / Non-Cadre |
-| **charlie** | password     | Intérimaire |
-| **david**   | password     | Stagiaire |
-
----
-
-## Utilisation et Scénarios de Test
-
-Accès à l'application : **http://localhost:5173**
-
-### Scénarios de Validation
-
-1.  **Interaction Conversationnelle (LLM)**
-    - **Entrée** : "Bonjour, qui êtes-vous ?"
-    - **Comportement attendu** : Réponse fluide générée par le LLM sans consultation de la base documentaire.
-
-2.  **Requête Métier (RAG + LLM)**
-    - **Entrée** : "Quelle est la procédure pour poser des congés ?"
-    - **Comportement attendu** : Identification du contexte RH, récupération des règles spécifiques, et génération d'une réponse précise incluant les démarches (Portail RH, délais).
-
-3.  **Filtrage de Domaine**
-    - **Entrée** : "Quel est le score du match d'hier ?"
-    - **Comportement attendu** : Le système identifie la question comme hors-sujet RH et décline poliment la réponse.
+- **Erreur "Model not found"** : Relancez `./setup-ollama.sh`.
+- **Login impossible** : Relancez `./setup-ldap.sh`.
+- **Application non accessible** : Vérifiez que les conteneurs tournent avec `docker ps`.
 
 ---
 

@@ -113,10 +113,12 @@ const Login = () => {
                         Comptes de test :
                     </p>
                     <ul className="text-xs text-blue-700 dark:text-blue-400 space-y-1">
-                        <li>• alice / password (CDI - Cadre)</li>
-                        <li>• bob / password (CDD - Non-Cadre)</li>
-                        <li>• charlie / password (Intérim)</li>
-                        <li>• david / password (Stagiaire)</li>
+                        <li>• alice / password (CADRE)</li>
+                        <li>• bob / password (CDI)</li>
+                        <li>• charlie / password (INTÉRIMAIRE)</li>
+                        <li>• david / password (STAGIAIRE)</li>
+                        <li>• emma / password (CDD)</li>
+                        <li>• frank / password (NON-CADRE)</li>
                     </ul>
                 </div>
             </div>
